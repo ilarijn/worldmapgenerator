@@ -3,7 +3,6 @@ package wmg;
 import wmg.ui.MainWindow;
 import javafx.application.Application;
 import javafx.stage.Stage;
-//import static javafx.application.Application.launch;
 
 public class App extends Application {
 

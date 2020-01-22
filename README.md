@@ -1,7 +1,7 @@
 ## World map generator
 
 #### Documentation
-[Project definition](/Documentation/Definition.md)
+[Project definition](/documentation/Definition.md)
 
 #### Weekly reports
-[Week 1](/Documentation/Week1.md)
+[Week 1](/documentation/Week1.md)

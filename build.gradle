@@ -14,6 +14,7 @@ plugins {
     id 'application'
     
     id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'checkstyle'
 }
 
 javafx {
@@ -38,4 +39,13 @@ dependencies {
 application {
     // Define the main class for the application.
     mainClassName = 'wmg.App'
+}
+
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.enabled false
+        html.enabled true
+        ignoreFailures = true        
+    }
 }
