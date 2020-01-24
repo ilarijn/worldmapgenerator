@@ -28,25 +28,27 @@ public class MainWindow {
 
     final Canvas canvas = new Canvas(this.width, this.height - 100);
     final GraphicsContext gc = canvas.getGraphicsContext2D();
+    final PixelWriter pw = gc.getPixelWriter();
 
+    final Button generateButton = new Button("Generate");
     final Slider cellSlider = new Slider();
     final HBox sliderBox = makeSlider(cellSlider);
-    final Button generateButton = new Button("Generate");
     final HBox bottomBar = new HBox(generateButton, sliderBox);
 
     final EventHandler<ActionEvent> generateAction = (ActionEvent event) -> {
-        PerlinNoise pn = new PerlinNoise(this.width + 1, this.height + 1, (int) cellSlider.getValue());
+        int cHeight = (int) canvas.getHeight();
+        int cWidth = (int) canvas.getWidth();
+        PerlinNoise pn = new PerlinNoise(cHeight, cWidth, (int) cellSlider.getValue());
         int[][] pixels = pn.getGrayscale();
-        PixelWriter pw = gc.getPixelWriter();
-        for (int y = 0; y < pixels.length; y++) {
-            for (int x = 0; x < pixels[0].length; x++) {
-                pw.setColor(y, x, Color.rgb(pixels[y][x], pixels[y][x], pixels[y][x]));
+        for (int y = 0; y < cHeight; y++) {
+            for (int x = 0; x < cWidth; x++) {
+                int value = pixels[y][x];
+                pw.setColor(x, y, Color.rgb(value, value, value));
             }
         }
     };
 
     public MainWindow(Stage stage) {
-
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, 700, 400);
 
@@ -56,7 +58,6 @@ public class MainWindow {
 
         layout.setBottom(bottomBar);
         layout.setTop(canvas);
-
     }
 
     private HBox makeSlider(Slider s) {
