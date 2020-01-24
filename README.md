@@ -2,7 +2,7 @@
 
 To start the application (requires Java 11 or later), clone this repository and run `./gradlew run` 
 
-For test and checkstyle reports, run `./gradlew build` and go to `./build/reports/` 
+For test and checkstyle reports, run `./gradlew build` and go to `/build/reports/` 
 
 #### Documentation
 [Project definition](/documentation/Definition.md)
