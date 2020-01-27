@@ -18,8 +18,8 @@ public class Func {
         return 6 * Math.pow(x, 5) - 15 * Math.pow(x, 4) + 10 * Math.pow(x, 3);
     }
 
-    public static Vector2 randomVector() {
-        double angle = Math.random() * 2 * Math.PI;
+    public static Vector2 getVector(double val) {
+        double angle = val * 2 * Math.PI;
         return new Vector2(Math.cos(angle), Math.sin(angle));
     }
 

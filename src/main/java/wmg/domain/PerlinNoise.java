@@ -1,41 +1,76 @@
 package wmg.domain;
 
+import java.util.Random;
 import wmg.util.*;
 
 public class PerlinNoise {
 
     Vector2[][] grid;
-    int height, width, gridHeight, gridWidth, cellSize;
+    int height, width, gridHeight, gridWidth, cellSize, octaves, seed;
+    double attenuation;
+    boolean fade;
 
-    public PerlinNoise(int h, int w, int c) {
+    public PerlinNoise(int h, int w, int c, int o, double a, int s, boolean f) {
         height = h;
         width = w;
         cellSize = c;
-
-        gridHeight = (int) Math.ceil(height / cellSize) + 1;
-        gridWidth = (int) Math.ceil(width / cellSize) + 1;
-
-        grid = new Vector2[gridHeight][gridWidth];
+        octaves = o;
+        attenuation = a;
+        seed = s;
+        fade = f;
     }
 
-    // Returns array of values in range [0, 255]
-    public int[][] getGrayscale() {
-        generateGradients();
-        int pixels[][] = new int[height][width];
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                double value = getValue(y, x);
-                pixels[y][x] = (int) (128 + 128 * value);
+    // Add together n iterations of attenuated noise where n is number of octaves
+    public double[][] getOctavedNoise() {
+        double[][] res = new double[height][width];
+        for (int octave = 0; octave < octaves; octave++) {
+            int octaveCell = (int) (cellSize * Math.pow(0.5, octave));
+            double octaveAtt = Math.pow(attenuation, octave);
+            int temp = cellSize;
+            cellSize = octaveCell;
+            double[][] noise = getNoise();
+            cellSize = temp;
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    res[y][x] += noise[y][x] * octaveAtt;
+                }
             }
         }
-        return pixels;
+        double maxValue = 0;
+        for (int octave = 0; octave < octaves; octave++) {
+            maxValue += Math.pow(attenuation, octave);
+        }
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                res[y][x] = res[y][x] / maxValue;
+            }
+        }
+        return res;
+    }
+
+    // Returns array of values in range [-1.0, 1.0]
+    public double[][] getNoise() {
+        gridHeight = (int) Math.ceil(height / cellSize) + 1;
+        gridWidth = (int) Math.ceil(width / cellSize) + 1;
+        grid = new Vector2[gridHeight][gridWidth];
+
+        generateGradients();
+
+        double values[][] = new double[height][width];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                values[y][x] = getValue(y, x);
+            }
+        }
+        return values;
     }
 
     // Generate random "gradient", i.e. vector, for each grid point  
     public void generateGradients() {
+        Random r = new Random(seed);
         for (int y = 0; y < gridHeight; y++) {
             for (int x = 0; x < gridWidth; x++) {
-                grid[y][x] = Func.randomVector();
+                grid[y][x] = Func.getVector(r.nextDouble());
             }
         }
     }
@@ -52,8 +87,10 @@ public class PerlinNoise {
         double relativeX = (x - cellX * cellSize * 1.0) / cellSize;
 
         // Apply fade
-        relativeX = Func.fade(relativeX);
-        relativeY = Func.fade(relativeY);
+        if (fade) {
+            relativeX = Func.fade(relativeX);
+            relativeY = Func.fade(relativeY);
+        }
 
         // Get gradient vectors of each corner node of current cell
         int rightCorner = cellX + 1 >= grid[0].length ? cellX : cellX + 1;

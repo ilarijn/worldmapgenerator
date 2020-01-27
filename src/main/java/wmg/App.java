@@ -7,11 +7,11 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("wmg");
-        MainWindow mw = new MainWindow(primaryStage);
-        primaryStage.setScene(mw.getScene());
-        primaryStage.show();
+    public void start(Stage stage) {
+        MainWindow mw = new MainWindow(stage);
+        stage.setTitle("wmg");
+        stage.setScene(mw.getScene());
+        stage.show();
     }
 
     public static void main(String[] args) {
