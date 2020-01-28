@@ -1,5 +1,7 @@
 package wmg.ui;
 
+import java.awt.image.RenderedImage;
+import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -13,28 +15,34 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import javafx.embed.swing.SwingFXUtils;
 
 import wmg.domain.PerlinNoise;
 
 public class MainWindow {
 
-    int width = 700;
+    int width = 725;
     int height = 500;
 
     final BorderPane layout = new BorderPane();
-    final Scene scene = new Scene(layout, this.width, this.height);
+    final Scene scene = new Scene(layout, this.width - 1, this.height);
 
     final Canvas canvas = new Canvas(this.width, this.height - 100);
     final GraphicsContext gc = canvas.getGraphicsContext2D();
     final PixelWriter pw = gc.getPixelWriter();
 
     final Button generateButton = new Button("Generate");
+    final Button exportButton = new Button("Export canvas");
     final Slider cellSlider = new Slider();
     final Slider octaveSlider = new Slider();
     final Slider thresholdSlider = new Slider();
@@ -47,11 +55,12 @@ public class MainWindow {
     final VBox seedBox = new VBox(seedLabel, seedText, checkBox);
     final VBox sliderBox1 = new VBox(
             makeIntSliderBox(cellSlider, "Cell size: ", 2, 256, 100),
-            makeIntSliderBox(octaveSlider, "Octaves: ", 1, 6, 4));
+            makeIntSliderBox(octaveSlider, "Octaves: ", 1, 8, 4));
     final VBox sliderBox2 = new VBox(
             makeDoubleSliderBox(thresholdSlider, "Water threshold: ", -0.4, 0.5, -0.1, 0.01),
             makeDoubleSliderBox(attnSlider, "Attenuation: ", 0.1, 2, 0.5, 0.1));
-    final HBox bottomBar = new HBox(generateButton, sliderBox1, sliderBox2, seedBox);
+    final VBox exportBox = new VBox(exportButton);
+    final HBox bottomBar = new HBox(generateButton, sliderBox1, sliderBox2, seedBox, exportBox);
 
     // Generate a map or grayscale noise according to given parameters
     final EventHandler<ActionEvent> generateAction = (ActionEvent event) -> {
@@ -88,19 +97,44 @@ public class MainWindow {
         }
     };
 
+    // Save canvas contents to a .png file
+    final EventHandler<ActionEvent> exportAction = (ActionEvent event) -> {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter
+                = new FileChooser.ExtensionFilter("png files (*.png)", "*.png");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        Stage newStage = new Stage();
+        File file = fileChooser.showSaveDialog(newStage);
+
+        if (file != null) {
+            try {
+                WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+                canvas.snapshot(null, writableImage);
+                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+                ImageIO.write(renderedImage, "png", file);
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
+        }
+    };
+
     public MainWindow(Stage stage) {
         gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, 700, 400);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
+        exportButton.setOnAction(exportAction);
         generateButton.setOnAction(generateAction);
-        generateButton.setMinWidth(60);
-        generateButton.setMinHeight(60);
+        generateButton.setMinWidth(50);
+        generateButton.setMinHeight(50);
 
         seedBox.setPadding(new Insets(10));
         bottomBar.setPadding(new Insets(10));
         sliderBox1.setPadding(new Insets(10));
         sliderBox2.setPadding(new Insets(10));
+        exportBox.setPadding(new Insets(30));
 
+        exportBox.setAlignment(Pos.BOTTOM_CENTER);
         bottomBar.setAlignment(Pos.CENTER_LEFT);
 
         layout.setBottom(bottomBar);
@@ -144,7 +178,7 @@ public class MainWindow {
         s.valueProperty().addListener((observable, oldvalue, newvalue)
                 -> {
             double i = newvalue.doubleValue();
-            value.setText(Double.toString(i));
+            value.setText(String.format("%.3f", i));
         });
 
         HBox hbox = new HBox(label, value);
