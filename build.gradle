@@ -24,6 +24,10 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.swing' ]
 }
 
+checkstyle {
+    toolVersion '8.17';    // your choice here
+}
+
 tasks.withType(Checkstyle) {
     reports {
         xml.enabled false

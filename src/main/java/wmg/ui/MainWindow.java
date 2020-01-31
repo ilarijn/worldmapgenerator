@@ -144,6 +144,8 @@ public class MainWindow {
     private VBox makeIntSliderBox(Slider s, String l, int min, int max, int val) {
         Label label = new Label(l);
         Text value = new Text();
+        HBox hbox = new HBox(label, value);
+        VBox vbox = new VBox(hbox, s);
 
         s.setMin(min);
         s.setMax(max);
@@ -158,15 +160,14 @@ public class MainWindow {
             value.setText(Integer.toString(i));
         });
 
-        HBox hbox = new HBox(label, value);
-        VBox vbox = new VBox(hbox, s);
-
         return vbox;
     }
 
     private VBox makeDoubleSliderBox(Slider s, String l, double min, double max, double val, double incr) {
         Label label = new Label(l);
         Text value = new Text();
+        HBox hbox = new HBox(label, value);
+        VBox vbox = new VBox(hbox, s);
 
         s.setMin(min);
         s.setMax(max);
@@ -180,9 +181,6 @@ public class MainWindow {
             double i = newvalue.doubleValue();
             value.setText(String.format("%.3f", i));
         });
-
-        HBox hbox = new HBox(label, value);
-        VBox vbox = new VBox(hbox, s);
 
         return vbox;
     }

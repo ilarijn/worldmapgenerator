@@ -1,19 +1,20 @@
 package wmg.domain;
 
 import java.util.Random;
-import wmg.util.*;
+import wmg.util.Func;
+import wmg.util.Vector2;
 
 public class PerlinNoise {
 
     Vector2[][] grid;
-    int height, width, gridHeight, gridWidth, cellSize, octaves, seed;
+    int height, width, gridHeight, gridWidth, scale, octaves, seed;
     double attenuation;
     boolean fade;
 
-    public PerlinNoise(int h, int w, int c, int o, double a, int s, boolean f) {
+    public PerlinNoise(int h, int w, int sc, int o, double a, int s, boolean f) {
         height = h;
         width = w;
-        cellSize = c;
+        scale = sc;
         octaves = o;
         attenuation = a;
         seed = s;
@@ -24,12 +25,12 @@ public class PerlinNoise {
     public double[][] getOctavedNoise() {
         double[][] res = new double[height][width];
         for (int octave = 0; octave < octaves; octave++) {
-            int octaveCell = (int) (cellSize * Math.pow(0.5, octave));
+            int octaveScale = (int) (scale * Math.pow(0.5, octave));
             double octaveAtt = Math.pow(attenuation, octave);
-            int temp = cellSize;
-            cellSize = octaveCell;
+            int temp = scale;
+            scale = octaveScale;
             double[][] noise = getNoise();
-            cellSize = temp;
+            scale = temp;
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
                     res[y][x] += noise[y][x] * octaveAtt;
@@ -50,8 +51,8 @@ public class PerlinNoise {
 
     // Returns array of values in range [-1.0, 1.0]
     public double[][] getNoise() {
-        gridHeight = (int) Math.ceil(height / cellSize) + 1;
-        gridWidth = (int) Math.ceil(width / cellSize) + 1;
+        gridHeight = (int) Math.ceil(height / scale) + 1;
+        gridWidth = (int) Math.ceil(width / scale) + 1;
         grid = new Vector2[gridHeight][gridWidth];
 
         generateGradients();
@@ -79,12 +80,12 @@ public class PerlinNoise {
     public double getValue(int y, int x) {
 
         // Figure out cell of coordinate, relative to current cell size
-        int cellY = (int) Math.floor(y / cellSize);
-        int cellX = (int) Math.floor(x / cellSize);
+        int cellY = (int) Math.floor(y / scale);
+        int cellX = (int) Math.floor(x / scale);
 
         // Coordinate inside cell
-        double relativeY = (y - cellY * cellSize * 1.0) / cellSize;
-        double relativeX = (x - cellX * cellSize * 1.0) / cellSize;
+        double relativeY = (y - cellY * scale * 1.0) / scale;
+        double relativeX = (x - cellX * scale * 1.0) / scale;
 
         // Apply fade
         if (fade) {
