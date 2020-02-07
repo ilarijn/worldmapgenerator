@@ -7,7 +7,7 @@ For test and checkstyle reports, run `./gradlew build` and go to `/build/reports
 #### Documentation
 [Project definition](/documentation/Definition.md)
 
-[Implementation details](/documentation/Implementation.md))
+[Implementation details](/documentation/Implementation.md)
 
 [Testing document](/documentation/Testing.md)
 
