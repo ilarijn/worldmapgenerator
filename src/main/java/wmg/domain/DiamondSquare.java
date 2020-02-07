@@ -9,18 +9,18 @@ import java.util.Random;
 public class DiamondSquare {
 
     double[][] grid;
-    int size, seed;
+    int size;
     Random random;
 
     // Random initial corner values.
     public DiamondSquare(int height, int width, int seed) {
-        this.seed = seed;
         random = new Random(seed);
 
         // Grid size is 2^n+1, the power of 2 greater to or equal than the 
         // larger of the given height and width values + 1.
         size = height > width ? height : width;
         size = (1 << (int) Math.ceil(Math.log(size) / Math.log(2))) + 1;
+        
         grid = new double[size][size];
 
         grid[0][0] = random.nextDouble() * 2.0 - 1.0;
@@ -31,11 +31,11 @@ public class DiamondSquare {
 
     // Fixed initial corner values.
     public DiamondSquare(int height, int width, int seed, double tl, double tr, double bl, double br) {
-        this.seed = seed;
         random = new Random(seed);
 
         size = height > width ? height : width;
         size = (1 << (int) Math.ceil(Math.log(size) / Math.log(2))) + 1;
+        
         grid = new double[size][size];
 
         grid[0][0] = tl;

@@ -82,17 +82,17 @@ public class MainWindow {
     final VBox sliderBox2 = new VBox();
 
     final Label seedLabel = new Label("Map seed:");
-    final TextField seedText = new TextField("3");
+    final NumberTextField seedText = new NumberTextField("3", true);
     final CheckBox fadeCheck = new CheckBox("Fade");
     final HBox checkBox = new HBox(fadeCheck);
     final VBox seedBox = new VBox();
 
     final Label cornerLabel = new Label("Corner values (in range [-1.0, 1.0]):");
     final CheckBox randomCheck = new CheckBox("Random");
-    final DoubleTextField tlNumber = new DoubleTextField("0.2");
-    final DoubleTextField trNumber = new DoubleTextField("0.3");
-    final DoubleTextField blNumber = new DoubleTextField("0.1");
-    final DoubleTextField brNumber = new DoubleTextField("0.4");
+    final NumberTextField tlNumber = new NumberTextField("0.2", false);
+    final NumberTextField trNumber = new NumberTextField("0.3", false);
+    final NumberTextField blNumber = new NumberTextField("0.1", false);
+    final NumberTextField brNumber = new NumberTextField("0.4", false);
     final HBox topNumberBox = new HBox(tlNumber, trNumber, randomCheck);
     final HBox botNumberBox = new HBox(blNumber, brNumber);
     final VBox cornerBox = new VBox(cornerLabel, topNumberBox, botNumberBox);
