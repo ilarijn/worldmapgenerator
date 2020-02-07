@@ -6,8 +6,8 @@ import static org.junit.Assert.*;
 public class PerlinNoiseTest {
 
     @Test
-    public void noiseValuesAreValid() {
-        PerlinNoise pn = new PerlinNoise(100, 100, 80, 3, 0.5, 10, true);
+    public void pnValuesAreValid() {
+        PerlinNoise pn = new PerlinNoise(100, 100, 80, 3, 0.5, true, 1);
         double[][] pixels = pn.getOctavedNoise();
         for (int y = 0; y < pixels.length; y++) {
             for (int x = 0; x < pixels[y].length; x++) {
@@ -16,4 +16,25 @@ public class PerlinNoiseTest {
         }
     }
 
+    @Test
+    public void dsValuesAreValid() {
+        DiamondSquare ds = new DiamondSquare(100, 100, 1);
+        double[][] pixels = ds.getNoise();
+        for (int y = 0; y < pixels.length; y++) {
+            for (int x = 0; x < pixels[y].length; x++) {
+                assertTrue(pixels[y][x] >= -1.0 && pixels[y][x] <= 1.0);
+            }
+        }
+    }
+
+    @Test
+    public void dsValuesAreValidFixed() {
+        DiamondSquare ds = new DiamondSquare(100, 100, 1, 0.99, 0.99, 0.99, 0.99);
+        double[][] pixels = ds.getNoise();
+        for (int y = 0; y < pixels.length; y++) {
+            for (int x = 0; x < pixels[y].length; x++) {
+                assertTrue(pixels[y][x] >= -1.0 && pixels[y][x] <= 1.0);
+            }
+        }
+    }
 }

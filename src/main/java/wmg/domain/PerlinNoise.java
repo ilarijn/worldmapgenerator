@@ -7,18 +7,19 @@ import wmg.util.Vector2;
 public class PerlinNoise {
 
     Vector2[][] grid;
-    int height, width, gridHeight, gridWidth, scale, octaves, seed;
+    int height, width, gridHeight, gridWidth, scale, octaves;
     double attenuation;
     boolean fade;
+    Random random;
 
-    public PerlinNoise(int h, int w, int sc, int o, double a, int s, boolean f) {
+    public PerlinNoise(int h, int w, int s, int o, double a, boolean f, int seed) {
         height = h;
         width = w;
-        scale = sc;
+        scale = s;
         octaves = o;
         attenuation = a;
-        seed = s;
         fade = f;
+        random = new Random(seed);
     }
 
     // Add together n iterations of attenuated noise where n is number of octaves
@@ -68,10 +69,9 @@ public class PerlinNoise {
 
     // Generate random "gradient", i.e. vector, for each grid point  
     public void generateGradients() {
-        Random r = new Random(seed);
         for (int y = 0; y < gridHeight; y++) {
             for (int x = 0; x < gridWidth; x++) {
-                grid[y][x] = Func.getVector(r.nextDouble());
+                grid[y][x] = Func.getVector(random.nextDouble());
             }
         }
     }

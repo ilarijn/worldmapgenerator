@@ -25,13 +25,13 @@ javafx {
 }
 
 checkstyle {
-    toolVersion '8.17';    // your choice here
+    toolVersion '8.17';    
 }
 
 tasks.withType(Checkstyle) {
     reports {
-        xml.enabled false
-        html.enabled true
+        xml.enabled = false
+        html.enabled = true
         ignoreFailures = true        
     }
 }
@@ -41,6 +41,10 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
     }
+}
+
+tasks.withType(JavaCompile).all {
+    options.compilerArgs.add("-Xlint:unchecked")
 }
 
 check.dependsOn jacocoTestReport

@@ -25,71 +25,102 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import java.io.IOException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 
 import wmg.domain.PerlinNoise;
+import wmg.domain.DiamondSquare;
 
 public class MainWindow {
 
-    int width = 725;
-    int height = 500;
+    int width = 800;
+    int height = 550;
 
     final BorderPane layout = new BorderPane();
     final Scene scene = new Scene(layout, this.width - 1, this.height);
 
-    final Canvas canvas = new Canvas(this.width, this.height - 100);
+    final Canvas canvas = new Canvas(this.width, this.height - 130);
     final GraphicsContext gc = canvas.getGraphicsContext2D();
     final PixelWriter pw = gc.getPixelWriter();
 
+    final MenuBar menuBar = new MenuBar();
+    final Menu menuFile = new Menu("File");
+    final MenuItem menuFileSaveMap = new MenuItem("Save map");
+    final VBox topMenu = new VBox(menuBar);
+
+    final String perlinSelection = "Perlin noise";
+    final String diamondSelection = "Diamond-square";
+    final ObservableList<String> algorithms
+            = FXCollections.observableArrayList(
+                    perlinSelection,
+                    diamondSelection
+            );
+    final ComboBox<String> algComboBox = new ComboBox<>(algorithms);
+
+    final ToggleGroup modeGroup = new ToggleGroup();
+    final RadioButton grayRadio = new RadioButton("Grayscale");
+    final RadioButton terrainRadio = new RadioButton("Terrain");
+
     final Button generateButton = new Button("Generate");
-    final Button exportButton = new Button("Export canvas");
     final Slider cellSlider = new Slider();
     final Slider octaveSlider = new Slider();
     final Slider thresholdSlider = new Slider();
     final Slider attnSlider = new Slider();
     final Label seedLabel = new Label("Map seed:");
-    final TextField seedText = new TextField("50");
+    final Label algLabel = new Label("Algorithm:");
+    final Label modeLabel = new Label("Display: ");
+    final TextField seedText = new TextField("3");
     final CheckBox fadeCheck = new CheckBox("Fade");
-    final CheckBox grayCheck = new CheckBox("Grayscale");
-    final HBox checkBox = new HBox(fadeCheck, grayCheck);
-    final VBox seedBox = new VBox(seedLabel, seedText, checkBox);
-    final VBox sliderBox1 = new VBox(
-            makeIntSliderBox(cellSlider, "Cell size: ", 2, 256, 100),
-            makeIntSliderBox(octaveSlider, "Octaves: ", 1, 8, 4));
-    final VBox sliderBox2 = new VBox(
-            makeDoubleSliderBox(thresholdSlider, "Water threshold: ", -0.4, 0.5, -0.1, 0.01),
-            makeDoubleSliderBox(attnSlider, "Attenuation: ", 0.1, 2, 0.5, 0.1));
-    final VBox exportBox = new VBox(exportButton);
-    final HBox bottomBar = new HBox(generateButton, sliderBox1, sliderBox2, seedBox, exportBox);
+    final HBox checkBox = new HBox(fadeCheck);
+    final VBox seedBox = new VBox();
+    final VBox sliderBox1 = new VBox();
+    final VBox sliderBox2 = new VBox();
+    final HBox radioBox = new HBox(grayRadio, terrainRadio);
+    final VBox modeBox = new VBox(algLabel, algComboBox, modeLabel, radioBox);
+    final HBox bottomBar = new HBox();
 
     // Generate a map or grayscale noise according to given parameters
     final EventHandler<ActionEvent> generateAction = (ActionEvent event) -> {
         int cHeight = (int) canvas.getHeight();
         int cWidth = (int) canvas.getWidth();
-        PerlinNoise pn = new PerlinNoise(cHeight, cWidth,
-                (int) cellSlider.getValue(),
-                (int) octaveSlider.getValue(),
-                attnSlider.getValue(),
-                Integer.parseInt(seedText.getText()),
-                fadeCheck.isSelected());
-        double[][] pixels = pn.getOctavedNoise();
+        double[][] pixels = new double[0][0];
+        if (algComboBox.getValue().equals(perlinSelection)) {
+            PerlinNoise pn = new PerlinNoise(cHeight, cWidth,
+                    (int) cellSlider.getValue(),
+                    (int) octaveSlider.getValue(),
+                    attnSlider.getValue(),
+                    fadeCheck.isSelected(),
+                    Integer.parseInt(seedText.getText()));
+            pixels = pn.getOctavedNoise();
+        } else if (algComboBox.getValue().equals(diamondSelection)) {
+            DiamondSquare ds = new DiamondSquare(cHeight, cWidth,
+                    Integer.parseInt(seedText.getText()));
+            pixels = ds.getNoise();
+        }
         double threshold = thresholdSlider.getValue();
         for (int y = 0; y < cHeight; y++) {
             for (int x = 0; x < cWidth; x++) {
-                if (grayCheck.isSelected()) {
+                if ((RadioButton) modeGroup.getSelectedToggle() == grayRadio) {
                     int value = (int) (128 + 128 * pixels[y][x]);
                     pw.setColor(x, y, Color.rgb(value, value, value));
                 } else {
                     double value = pixels[y][x];
                     if (value < threshold) {
                         pw.setColor(x, y, Color.BLUE);
-                    } else if (value >= threshold && value < threshold + 0.01) {
-                        pw.setColor(x, y, Color.YELLOW);
-                    } else if (value >= threshold + 0.01 && value < threshold + 0.25) {
+                    } else if (value < threshold + 0.01) {
+                        pw.setColor(x, y, Color.KHAKI);
+                    } else if (value < threshold + 0.25) {
                         pw.setColor(x, y, Color.GREEN);
-                    } else if (value >= threshold + 0.25 && value < threshold + 0.35) {
+                    } else if (value < threshold + 0.35) {
                         pw.setColor(x, y, Color.DARKGREEN);
-                    } else if (value >= threshold + 0.35) {
+                    } else {
                         pw.setColor(x, y, Color.GRAY);
                     }
                 }
@@ -123,22 +154,70 @@ public class MainWindow {
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        exportButton.setOnAction(exportAction);
+        perlinSetup();
+
         generateButton.setOnAction(generateAction);
         generateButton.setMinWidth(50);
         generateButton.setMinHeight(50);
+
+        algComboBox.setValue(perlinSelection);
+        algComboBox.setOnAction(e -> {
+            if (algComboBox.getValue().equals(perlinSelection)) {
+                perlinSetup();
+            } else if (algComboBox.getValue().equals(diamondSelection)) {
+                diamondSetup();
+            }
+        });
+
+        grayRadio.setToggleGroup(modeGroup);
+        terrainRadio.setToggleGroup(modeGroup);
+        terrainRadio.setSelected(true);
 
         seedBox.setPadding(new Insets(10));
         bottomBar.setPadding(new Insets(10));
         sliderBox1.setPadding(new Insets(10));
         sliderBox2.setPadding(new Insets(10));
-        exportBox.setPadding(new Insets(30));
+        modeBox.setPadding(new Insets(10));
 
-        exportBox.setAlignment(Pos.BOTTOM_CENTER);
         bottomBar.setAlignment(Pos.CENTER_LEFT);
 
+        menuFileSaveMap.setOnAction(exportAction);
+        menuFile.getItems().addAll(menuFileSaveMap);
+        menuBar.getMenus().add(menuFile);
+
+        layout.setTop(topMenu);
+        layout.setCenter(canvas);
         layout.setBottom(bottomBar);
-        layout.setTop(canvas);
+    }
+
+    private void perlinSetup() {
+        sliderBox1.getChildren().clear();
+        sliderBox1.getChildren().addAll(
+                makeIntSliderBox(cellSlider, "Cell size: ", 2, 256, 100),
+                makeIntSliderBox(octaveSlider, "Octaves: ", 1, 8, 4));
+
+        sliderBox2.getChildren().clear();
+        sliderBox2.getChildren().addAll(
+                makeDoubleSliderBox(thresholdSlider, "Water threshold: ", -0.4, 0.5, -0.1, 0.01),
+                makeDoubleSliderBox(attnSlider, "Attenuation: ", 0.1, 2, 0.5, 0.1));
+
+        seedBox.getChildren().clear();
+        seedBox.getChildren().addAll(seedLabel, seedText, checkBox);
+
+        bottomBar.getChildren().clear();
+        bottomBar.getChildren().addAll(generateButton, sliderBox1, sliderBox2, seedBox, modeBox);
+    }
+
+    private void diamondSetup() {
+        sliderBox1.getChildren().clear();
+        sliderBox1.getChildren().addAll(
+                makeDoubleSliderBox(thresholdSlider, "Water threshold: ", -0.4, 0.5, -0.1, 0.01));
+
+        seedBox.getChildren().clear();
+        seedBox.getChildren().addAll(seedLabel, seedText);
+
+        bottomBar.getChildren().clear();
+        bottomBar.getChildren().addAll(generateButton, sliderBox1, seedBox, modeBox);
     }
 
     private VBox makeIntSliderBox(Slider s, String l, int min, int max, int val) {
