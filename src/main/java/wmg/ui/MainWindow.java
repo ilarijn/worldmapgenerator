@@ -67,23 +67,36 @@ public class MainWindow {
     final ToggleGroup modeGroup = new ToggleGroup();
     final RadioButton grayRadio = new RadioButton("Grayscale");
     final RadioButton terrainRadio = new RadioButton("Terrain");
-
-    final Button generateButton = new Button("Generate");
-    final Slider cellSlider = new Slider();
-    final Slider octaveSlider = new Slider();
-    final Slider thresholdSlider = new Slider();
-    final Slider attnSlider = new Slider();
-    final Label seedLabel = new Label("Map seed:");
+    final HBox radioBox = new HBox(grayRadio, terrainRadio);
     final Label algLabel = new Label("Algorithm:");
     final Label modeLabel = new Label("Display: ");
+    final VBox modeBox = new VBox(algLabel, algComboBox, modeLabel, radioBox);
+
+    final Button generateButton = new Button("Generate");
+
+    final Slider cellSlider = new Slider();
+    final Slider octaveSlider = new Slider();
+    final Slider attnSlider = new Slider();
+    final Slider thresholdSlider = new Slider();
+    final VBox sliderBox1 = new VBox();
+    final VBox sliderBox2 = new VBox();
+
+    final Label seedLabel = new Label("Map seed:");
     final TextField seedText = new TextField("3");
     final CheckBox fadeCheck = new CheckBox("Fade");
     final HBox checkBox = new HBox(fadeCheck);
     final VBox seedBox = new VBox();
-    final VBox sliderBox1 = new VBox();
-    final VBox sliderBox2 = new VBox();
-    final HBox radioBox = new HBox(grayRadio, terrainRadio);
-    final VBox modeBox = new VBox(algLabel, algComboBox, modeLabel, radioBox);
+
+    final Label cornerLabel = new Label("Corner values (in range [-1.0, 1.0]):");
+    final CheckBox randomCheck = new CheckBox("Random");
+    final DoubleTextField tlNumber = new DoubleTextField("0.2");
+    final DoubleTextField trNumber = new DoubleTextField("0.3");
+    final DoubleTextField blNumber = new DoubleTextField("0.1");
+    final DoubleTextField brNumber = new DoubleTextField("0.4");
+    final HBox topNumberBox = new HBox(tlNumber, trNumber, randomCheck);
+    final HBox botNumberBox = new HBox(blNumber, brNumber);
+    final VBox cornerBox = new VBox(cornerLabel, topNumberBox, botNumberBox);
+
     final HBox bottomBar = new HBox();
 
     // Generate a map or grayscale noise according to given parameters
@@ -100,8 +113,19 @@ public class MainWindow {
                     Integer.parseInt(seedText.getText()));
             pixels = pn.getOctavedNoise();
         } else if (algComboBox.getValue().equals(diamondSelection)) {
-            DiamondSquare ds = new DiamondSquare(cHeight, cWidth,
-                    Integer.parseInt(seedText.getText()));
+            DiamondSquare ds;
+            if (randomCheck.isSelected()) {
+                ds = new DiamondSquare(cHeight, cWidth,
+                        Integer.parseInt(seedText.getText()));
+            } else {
+                ds = new DiamondSquare(cHeight, cWidth,
+                        Integer.parseInt(seedText.getText()),
+                        Double.parseDouble(tlNumber.getText()),
+                        Double.parseDouble(trNumber.getText()),
+                        Double.parseDouble(blNumber.getText()),
+                        Double.parseDouble(brNumber.getText())
+                );
+            }
             pixels = ds.getNoise();
         }
         double threshold = thresholdSlider.getValue();
@@ -169,15 +193,23 @@ public class MainWindow {
             }
         });
 
+        randomCheck.setOnAction(t -> {
+            toggleDiamondValues();
+        });
+
         grayRadio.setToggleGroup(modeGroup);
         terrainRadio.setToggleGroup(modeGroup);
         terrainRadio.setSelected(true);
+
+        topNumberBox.setSpacing(5);
+        botNumberBox.setSpacing(5);
 
         seedBox.setPadding(new Insets(10));
         bottomBar.setPadding(new Insets(10));
         sliderBox1.setPadding(new Insets(10));
         sliderBox2.setPadding(new Insets(10));
         modeBox.setPadding(new Insets(10));
+        cornerBox.setPadding(new Insets(10));
 
         bottomBar.setAlignment(Pos.CENTER_LEFT);
 
@@ -191,6 +223,12 @@ public class MainWindow {
     }
 
     private void perlinSetup() {
+        int textWidth = 40;
+        tlNumber.setPrefWidth(textWidth);
+        trNumber.setPrefWidth(textWidth);
+        blNumber.setPrefWidth(textWidth);
+        brNumber.setPrefWidth(textWidth);
+
         sliderBox1.getChildren().clear();
         sliderBox1.getChildren().addAll(
                 makeIntSliderBox(cellSlider, "Cell size: ", 2, 256, 100),
@@ -211,13 +249,38 @@ public class MainWindow {
     private void diamondSetup() {
         sliderBox1.getChildren().clear();
         sliderBox1.getChildren().addAll(
-                makeDoubleSliderBox(thresholdSlider, "Water threshold: ", -0.4, 0.5, -0.1, 0.01));
+                makeDoubleSliderBox(thresholdSlider, "Water threshold: ", -0.4, 0.5, 0.0, 0.01));
+
+        randomCheck.setSelected(true);
+        toggleDiamondValues();
 
         seedBox.getChildren().clear();
         seedBox.getChildren().addAll(seedLabel, seedText);
 
         bottomBar.getChildren().clear();
-        bottomBar.getChildren().addAll(generateButton, sliderBox1, seedBox, modeBox);
+        bottomBar.getChildren().addAll(generateButton, cornerBox, sliderBox1, seedBox, modeBox);
+    }
+
+    private void toggleDiamondValues() {
+        if (randomCheck.isSelected()) {
+            tlNumber.setDisable(true);
+            trNumber.setDisable(true);
+            blNumber.setDisable(true);
+            brNumber.setDisable(true);
+            tlNumber.setText("?");
+            trNumber.setText("?");
+            blNumber.setText("?");
+            brNumber.setText("?");
+        } else {
+            tlNumber.setDisable(false);
+            trNumber.setDisable(false);
+            blNumber.setDisable(false);
+            brNumber.setDisable(false);
+            tlNumber.setText("0");
+            trNumber.setText("0");
+            blNumber.setText("0");
+            brNumber.setText("0");
+        }
     }
 
     private VBox makeIntSliderBox(Slider s, String l, int min, int max, int val) {
