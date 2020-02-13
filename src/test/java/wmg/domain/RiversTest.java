@@ -1,5 +1,6 @@
 package wmg.domain;
 
+import java.util.Arrays;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import wmg.util.Func;
@@ -72,9 +73,9 @@ public class RiversTest {
     @Test
     public void dijkstraTest() {
         double[][] grid = new double[][]{
-            {0, 1, 2},
-            {0, 2, 3},
-            {1, 0, 0}
+            {0, 2, 2},
+            {0, 1, 10},
+            {2, 0, 4}
         };
         Rivers r = new Rivers(grid);
         double[][] graph = r.setup();
@@ -90,17 +91,25 @@ public class RiversTest {
             System.out.println("]");
         }
 
-        System.out.println("");
-        System.out.println("Graph\n*****");
-        System.out.println("0 to 3: " + (graph[0][3] - 1.0));
-        System.out.println("3 to 6: " + (graph[3][6] - 1.0));
-        System.out.println("6 to 7: " + (graph[6][7] - 1.0));
-        System.out.println("7 to 8: " + (graph[7][8] - 1.0));
-        System.out.println("");
+        System.out.println("\nGraph\n*****");
+        System.out.println("0 to 3: " + (graph[0][3]));
+        System.out.println("3 to 6: " + (graph[3][6]));
+        System.out.println("4 to 5: " + (graph[4][5]));
+        System.out.println("6 to 7: " + (graph[6][7]));
+        System.out.println("7 to 8: " + (graph[7][8]) + "\n");
 
         for (int i = 0; i < distances.length; i++) {
             System.out.println("Distance to node " + i + ": " + distances[i]);
         }
-    }
 
+        int[] path = r.getPath();
+        int dest = 5;
+
+        System.out.print("\n" + dest + " to 0:\n" + dest);
+        while (dest != 0) {
+            dest = path[dest];
+            System.out.print(" -> " + dest);
+        }
+        System.out.println("\nNeighbors of 0: " + Arrays.toString(r.getNeighbors()[0].getSet()));
+    }
 }

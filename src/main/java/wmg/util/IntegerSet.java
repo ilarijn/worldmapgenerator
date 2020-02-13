@@ -4,16 +4,19 @@ public class IntegerSet {
 
     int[] set;
     int ptr;
+    boolean zero;
 
     public IntegerSet() {
         ptr = 0;
         set = new int[8];
+        zero = false;
     }
 
     public void add(int x) {
-        if (!this.contains(x)) {
+        if (!this.contains(x) || (x == 0 && !zero) ) {
             if (ptr >= set.length) expand();
             set[ptr++] = x;
+            if (x == 0) zero = true;
         }
     }
 
@@ -53,5 +56,4 @@ public class IntegerSet {
         for (int i = 0; i < ptr; i++) res[i] = set[i];
         return res;
     }
-
 }

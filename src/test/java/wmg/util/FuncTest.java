@@ -24,8 +24,8 @@ public class FuncTest {
         assertTrue(arr.length == 0);
         assertTrue(set.size() == 0);
 
-        set.add(1);
-        set.add(1);
+        set.add(0);
+        set.add(0);
         arr = set.getSet();
         assertTrue(arr.length == 1);
         assertTrue(set.size() == 1);

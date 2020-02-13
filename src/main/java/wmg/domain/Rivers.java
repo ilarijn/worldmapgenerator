@@ -4,12 +4,12 @@ import wmg.util.IntegerSet;
 
 // River generation by finding shortest path from source to destination.
 // Heightmap values are weights in the graph.
-
 public class Rivers {
 
     double[][] heightMap;
     double[][] graph;
     IntegerSet[] neighbors;
+    int[] path;
 
     int n;
 
@@ -23,41 +23,41 @@ public class Rivers {
     // TODO: write this again with a priority queue
     public double[] dijkstra(int src) {
 
-        double[] distance = new double[n];
+        double[] distances = new double[n];
         boolean[] included = new boolean[n];
+        path = new int[n];
 
         for (int i = 0; i < n; i++) {
-            distance[i] = Double.MAX_VALUE;
+            distances[i] = Double.MAX_VALUE;
             included[i] = false;
         }
 
-        distance[src] = 0;
+        distances[src] = 0;
 
         for (int i = 0; i < n - 1; i++) {
-            double min = Double.MAX_VALUE;
-            int min_index = -1;
+            double minWeight = Double.MAX_VALUE;
+            int minNode = -1;
 
             for (int v = 0; v < n; v++) {
-                if (included[v] == false && distance[v] <= min) {
-                    min = distance[v];
-                    min_index = v;
+                if (included[v] == false && distances[v] <= minWeight) {
+                    minWeight = distances[v];
+                    minNode = v;
                 }
             }
 
-            included[min_index] = true;
+            included[minNode] = true;
 
-            //System.out.println("Neighbors of node " + min_index);
-            //System.out.println(Arrays.toString(neighbors[min_index].getSet()));
-            for (int node : neighbors[min_index].getSet()) {
-                if (!included[node]
-                        && distance[min_index] != Double.MAX_VALUE
-                        && distance[min_index] + graph[min_index][node] < distance[node]) {
-                    distance[node] = distance[min_index] + graph[min_index][node];
-                }   
+            for (int neighborNode : neighbors[minNode].getSet()) {
+                if (!included[neighborNode]
+                        && distances[minNode] != Double.MAX_VALUE
+                        && distances[minNode] + graph[minNode][neighborNode] < distances[neighborNode]) {
+                    distances[neighborNode] = distances[minNode] + graph[minNode][neighborNode];
+                    path[neighborNode] = minNode;
+                }
             }
         }
 
-        return distance;
+        return distances;
     }
 
     // Create adjacency matrix and neighbor sets from height map, adding 1.0
@@ -134,7 +134,7 @@ public class Rivers {
             int north = current - rowLength;
             int south = current + rowLength;
             int northWest = current - rowLength - 1;
-            int west = current - 1; 
+            int west = current - 1;
             int southWest = current + rowLength - 1;
 
             neighbors[current].addAll(north, south, northWest, west, southWest);
@@ -215,14 +215,15 @@ public class Rivers {
                 bottomRight - rowLength - 1,
                 bottomRight - rowLength
         );
-
+        
         return graph;
     }
 
     public IntegerSet[] getNeighbors() {
         return neighbors;
     }
-    
-    
 
+    public int[] getPath() {
+        return path;
+    }
 }
