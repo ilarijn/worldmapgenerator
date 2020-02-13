@@ -12,7 +12,7 @@ public class PerlinNoise {
 
     Vector2[][] grid;
     int height, width, gridHeight, gridWidth, scale, octaves;
-    double attenuation;
+    double amplitude;
     boolean fade;
     Random random;
 
@@ -21,7 +21,7 @@ public class PerlinNoise {
         width = w;
         scale = s;
         octaves = o;
-        attenuation = a;
+        amplitude = a;
         fade = f;
         random = new Random(seed);
     }
@@ -31,20 +31,20 @@ public class PerlinNoise {
         double[][] res = new double[height][width];
         for (int octave = 0; octave < octaves; octave++) {
             int octaveScale = (int) (scale * Math.pow(0.5, octave));
-            double octaveAtt = Math.pow(attenuation, octave);
+            double octaveAmp = Math.pow(amplitude, octave);
             int temp = scale;
             scale = octaveScale;
             double[][] noise = getNoise();
             scale = temp;
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    res[y][x] += noise[y][x] * octaveAtt;
+                    res[y][x] += noise[y][x] * octaveAmp;
                 }
             }
         }
         double maxValue = 0;
         for (int octave = 0; octave < octaves; octave++) {
-            maxValue += Math.pow(attenuation, octave);
+            maxValue += Math.pow(amplitude, octave);
         }
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {

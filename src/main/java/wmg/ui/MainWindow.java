@@ -45,7 +45,7 @@ public class MainWindow {
     final BorderPane layout = new BorderPane();
     final Scene scene = new Scene(layout, this.width - 1, this.height);
 
-    final Canvas canvas = new Canvas(this.width, this.height - 130);
+    final Canvas canvas = new Canvas(this.width, this.height - 135);
     final GraphicsContext gc = canvas.getGraphicsContext2D();
     final PixelWriter pw = gc.getPixelWriter();
 
@@ -69,13 +69,15 @@ public class MainWindow {
     final HBox radioBox = new HBox(grayRadio, terrainRadio);
     final Label algLabel = new Label("Algorithm:");
     final Label modeLabel = new Label("Display: ");
-    final VBox modeBox = new VBox(algLabel, algComboBox, modeLabel, radioBox);
+    final VBox algBox = new VBox(algLabel, algComboBox);
+    final VBox displayBox = new VBox(modeLabel, radioBox);
+    final VBox modeBox = new VBox(algBox, displayBox);
 
     final Button generateButton = new Button("Generate");
 
     final Slider cellSlider = new Slider();
     final Slider octaveSlider = new Slider();
-    final Slider attnSlider = new Slider();
+    final Slider ampSlider = new Slider();
     final Slider thresholdSlider = new Slider();
     final VBox sliderBox1 = new VBox();
     final VBox sliderBox2 = new VBox();
@@ -84,6 +86,7 @@ public class MainWindow {
     final NumberTextField seedText = new NumberTextField("3", true);
     final CheckBox fadeCheck = new CheckBox("Fade");
     final HBox checkBox = new HBox(fadeCheck);
+    final VBox seedTextBox = new VBox(seedLabel, seedText);
     final VBox seedBox = new VBox();
 
     final Label cornerLabel = new Label("Corner values (in range [-1.0, 1.0]):");
@@ -107,7 +110,7 @@ public class MainWindow {
             PerlinNoise pn = new PerlinNoise(cHeight, cWidth,
                     (int) cellSlider.getValue(),
                     (int) octaveSlider.getValue(),
-                    attnSlider.getValue(),
+                    ampSlider.getValue(),
                     fadeCheck.isSelected(),
                     Integer.parseInt(seedText.getText()));
             pixels = pn.getOctavedNoise();
@@ -128,9 +131,10 @@ public class MainWindow {
             pixels = ds.getNoise();
         }
         double threshold = thresholdSlider.getValue();
+        boolean gray = (RadioButton) modeGroup.getSelectedToggle() == grayRadio;
         for (int y = 0; y < cHeight; y++) {
             for (int x = 0; x < cWidth; x++) {
-                if ((RadioButton) modeGroup.getSelectedToggle() == grayRadio) {
+                if (gray) {
                     int value = (int) (128 + 128 * pixels[y][x]);
                     pw.setColor(x, y, Color.rgb(value, value, value));
                 } else {
@@ -202,6 +206,9 @@ public class MainWindow {
 
         topNumberBox.setSpacing(5);
         botNumberBox.setSpacing(5);
+        seedBox.setSpacing(10);
+        radioBox.setSpacing(5);
+        modeBox.setSpacing(5);
 
         seedBox.setPadding(new Insets(10));
         bottomBar.setPadding(new Insets(10));
@@ -230,16 +237,15 @@ public class MainWindow {
 
         sliderBox1.getChildren().clear();
         sliderBox1.getChildren().addAll(
-                makeIntSliderBox(cellSlider, "Cell size: ", 2, 256, 100),
+                makeIntSliderBox(cellSlider, "Scale: ", 2, 256, 100),
                 makeIntSliderBox(octaveSlider, "Octaves: ", 1, 8, 4));
 
         sliderBox2.getChildren().clear();
-        sliderBox2.getChildren().addAll(
-                makeDoubleSliderBox(thresholdSlider, "Water threshold: ", -0.4, 0.5, -0.1, 0.01),
-                makeDoubleSliderBox(attnSlider, "Attenuation: ", 0.1, 2, 0.5, 0.1));
+        sliderBox2.getChildren().addAll(makeDoubleSliderBox(thresholdSlider, "Water level: ", -0.4, 0.5, -0.1, 0.01),
+                makeDoubleSliderBox(ampSlider, "Amplitude: ", 0.1, 2, 0.5, 0.1));
 
         seedBox.getChildren().clear();
-        seedBox.getChildren().addAll(seedLabel, seedText, checkBox);
+        seedBox.getChildren().addAll(seedTextBox, checkBox);
 
         bottomBar.getChildren().clear();
         bottomBar.getChildren().addAll(generateButton, sliderBox1, sliderBox2, seedBox, modeBox);
@@ -254,7 +260,7 @@ public class MainWindow {
         toggleDiamondValues();
 
         seedBox.getChildren().clear();
-        seedBox.getChildren().addAll(seedLabel, seedText);
+        seedBox.getChildren().addAll(seedTextBox);
 
         bottomBar.getChildren().clear();
         bottomBar.getChildren().addAll(generateButton, cornerBox, sliderBox1, seedBox, modeBox);

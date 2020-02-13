@@ -23,4 +23,8 @@ public class Func {
         return new Vector2(Math.cos(angle), Math.sin(angle));
     }
 
+    public static double roundToFive(double val) {
+        return (double) Math.round(val * 100000d) / 100000d;
+    }
+
 }

@@ -43,8 +43,16 @@ jacocoTestReport {
     }
 }
 
+test {
+    testLogging {
+        showStandardStreams = true
+    }
+}
+
 tasks.withType(JavaCompile).all {
     options.compilerArgs.add("-Xlint:unchecked")
 }
+
+
 
 check.dependsOn jacocoTestReport
