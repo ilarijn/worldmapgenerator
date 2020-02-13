@@ -33,6 +33,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseEvent;
 
 import wmg.domain.PerlinNoise;
 import wmg.domain.DiamondSquare;
@@ -40,19 +41,20 @@ import wmg.domain.DiamondSquare;
 public class MainWindow {
 
     int width = 800;
-    int height = 550;
+    int height = 580;
 
     final BorderPane layout = new BorderPane();
     final Scene scene = new Scene(layout, this.width - 1, this.height);
 
-    final Canvas canvas = new Canvas(this.width, this.height - 135);
+    final Canvas canvas = new Canvas(this.width, this.height - 150);
     final GraphicsContext gc = canvas.getGraphicsContext2D();
     final PixelWriter pw = gc.getPixelWriter();
 
     final MenuBar menuBar = new MenuBar();
     final Menu menuFile = new Menu("File");
     final MenuItem menuFileSaveMap = new MenuItem("Save map");
-    final VBox topMenu = new VBox(menuBar);
+    final Text coordinates = new Text();
+    final VBox topMenu = new VBox(menuBar, coordinates);
 
     final String perlinSelection = "Perlin noise";
     final String diamondSelection = "Diamond-square";
@@ -216,12 +218,16 @@ public class MainWindow {
         sliderBox2.setPadding(new Insets(10));
         modeBox.setPadding(new Insets(10));
         cornerBox.setPadding(new Insets(10));
-
+        
         bottomBar.setAlignment(Pos.CENTER_LEFT);
 
         menuFileSaveMap.setOnAction(exportAction);
         menuFile.getItems().addAll(menuFileSaveMap);
-        menuBar.getMenus().add(menuFile);
+        menuBar.getMenus().addAll(menuFile);
+
+        canvas.setOnMouseMoved((MouseEvent event) -> {
+            coordinates.setText("y: " + (int) (event.getSceneY() - topMenu.getHeight()) + " x: " + (int) event.getSceneX());
+        });
 
         layout.setTop(topMenu);
         layout.setCenter(canvas);

@@ -3,19 +3,17 @@ package wmg.util;
 public class IntegerSet {
 
     int[] set;
+    int ptr;
 
     public IntegerSet() {
-        set = new int[0];
+        ptr = 0;
+        set = new int[8];
     }
 
     public void add(int x) {
         if (!this.contains(x)) {
-            int[] clone = new int[set.length + 1];
-            for (int i = 0; i < set.length; i++) {
-                clone[i] = set[i];
-            }
-            clone[clone.length - 1] = x;
-            set = clone;
+            if (ptr >= set.length) expand();
+            set[ptr++] = x;
         }
     }
 
@@ -23,6 +21,14 @@ public class IntegerSet {
         for (int i : args) {
             add(i);
         }
+    }
+
+    private void expand() {
+        int[] clone = new int[set.length * 2];
+        for (int i = 0; i < set.length; i++) {
+            clone[i] = set[i];
+        }
+        set = clone;
     }
 
     public boolean contains(int x) {
@@ -39,11 +45,13 @@ public class IntegerSet {
     }
 
     public int size() {
-        return set.length;
+        return ptr;
     }
 
     public int[] getSet() {
-        return set;
+        int[] res = new int[ptr];
+        for (int i = 0; i < ptr; i++) res[i] = set[i];
+        return res;
     }
 
 }
