@@ -1,6 +1,8 @@
 ## World map generator
 
-To start the application (requires Java 11 or later), clone this repository and run `./gradlew run` 
+Procedural terrain map generation.
+
+To use the application (requires Java 11 or later), clone this repository and run `./gradlew run` 
 
 For test and checkstyle reports, run `./gradlew build` and go to `/build/reports/` 
 
@@ -11,6 +13,8 @@ For test and checkstyle reports, run `./gradlew build` and go to `/build/reports
 
 [Testing document](/documentation/Testing.md)
 
+[Todo](/documentation/Todo.md)
+
 #### Weekly reports
 [Week 1](/documentation/Week1.md)
 
@@ -19,3 +23,5 @@ For test and checkstyle reports, run `./gradlew build` and go to `/build/reports
 [Week 3](/documentation/Week3.md)
 
 [Week 4](/documentation/Week4.md)
+
+[Week 5](/documentation/Week5.md)
