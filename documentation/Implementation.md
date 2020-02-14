@@ -1,7 +1,7 @@
 ### Implementation details
-The application draws 2D arrays, or heightmaps, on a JavaFX canvas where each array value is a pixel that is assigned an appropriate color depending on display mode. 
+The application draws two-dimensional arrays, or heightmaps, on a JavaFX canvas where each array value is a pixel that is assigned an appropriate color depending on display mode. 
 
-So far there are two algorithms implemented, Perlin noise and diamond-square. Both produce a 2D array of double values.
+There are two algorithms implemented for the generation of maps, Perlin noise and diamond-square. Both are so-called noise functions produce a 2D array of double values.
 
 There is also a class for adding rivers to a heightmap. This works by using Dijkstra's algorithm to find shortest paths in a graph created from the heightmap and adjusting the original's values on the river's path.
 
