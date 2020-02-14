@@ -37,6 +37,7 @@ import javafx.scene.input.MouseEvent;
 
 import wmg.domain.PerlinNoise;
 import wmg.domain.DiamondSquare;
+import wmg.domain.Rivers;
 
 public class MainWindow {
 
@@ -116,6 +117,9 @@ public class MainWindow {
                     fadeCheck.isSelected(),
                     Integer.parseInt(seedText.getText()));
             pixels = pn.getOctavedNoise();
+            Rivers r = new Rivers(pixels);
+            r.apply(280, 100, 70, 300);
+            r.apply(150, 700, 300, 400);
         } else if (algComboBox.getValue().equals(diamondSelection)) {
             DiamondSquare ds;
             if (randomCheck.isSelected()) {
@@ -155,6 +159,7 @@ public class MainWindow {
                 }
             }
         }
+
     };
 
     // Save canvas contents to a .png file
@@ -202,6 +207,10 @@ public class MainWindow {
             toggleDiamondValues();
         });
 
+        canvas.setOnMouseMoved((MouseEvent event) -> {
+            coordinates.setText("y: " + (int) (event.getSceneY() - topMenu.getHeight()) + " x: " + (int) event.getSceneX());
+        });
+
         grayRadio.setToggleGroup(modeGroup);
         terrainRadio.setToggleGroup(modeGroup);
         terrainRadio.setSelected(true);
@@ -218,16 +227,12 @@ public class MainWindow {
         sliderBox2.setPadding(new Insets(10));
         modeBox.setPadding(new Insets(10));
         cornerBox.setPadding(new Insets(10));
-        
+
         bottomBar.setAlignment(Pos.CENTER_LEFT);
 
         menuFileSaveMap.setOnAction(exportAction);
         menuFile.getItems().addAll(menuFileSaveMap);
         menuBar.getMenus().addAll(menuFile);
-
-        canvas.setOnMouseMoved((MouseEvent event) -> {
-            coordinates.setText("y: " + (int) (event.getSceneY() - topMenu.getHeight()) + " x: " + (int) event.getSceneX());
-        });
 
         layout.setTop(topMenu);
         layout.setCenter(canvas);
@@ -244,11 +249,11 @@ public class MainWindow {
         sliderBox1.getChildren().clear();
         sliderBox1.getChildren().addAll(
                 makeIntSliderBox(cellSlider, "Scale: ", 2, 256, 100),
-                makeIntSliderBox(octaveSlider, "Octaves: ", 1, 8, 4));
+                makeIntSliderBox(octaveSlider, "Octaves: ", 1, 8, 5));
 
         sliderBox2.getChildren().clear();
         sliderBox2.getChildren().addAll(makeDoubleSliderBox(thresholdSlider, "Water level: ", -0.4, 0.5, -0.1, 0.01),
-                makeDoubleSliderBox(ampSlider, "Amplitude: ", 0.1, 2, 0.5, 0.1));
+                makeDoubleSliderBox(ampSlider, "Amplitude: ", 0.1, 2, 0.6, 0.1));
 
         seedBox.getChildren().clear();
         seedBox.getChildren().addAll(seedTextBox, checkBox);

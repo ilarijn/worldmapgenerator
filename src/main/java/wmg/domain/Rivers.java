@@ -1,13 +1,15 @@
 package wmg.domain;
 
+import java.util.PriorityQueue;
 import wmg.util.IntegerSet;
+import wmg.util.Node;
 
 // River generation by finding shortest path from source to destination.
 // Heightmap values are weights in the graph.
 public class Rivers {
 
     double[][] heightMap;
-    double[][] graph;
+    Node[] graph;
     IntegerSet[] neighbors;
     int[] path;
 
@@ -18,11 +20,53 @@ public class Rivers {
         n = grid.length * grid[0].length;
     }
 
+    public void apply(int srcY, int srcX, int destY, int destX) {
+
+        int src = srcY * 800 + srcX;
+        int dest = destY * 800 + destX;
+
+        setup();
+        dijkstra(src);
+
+        double riverVal = -0.2;
+
+        Node node = graph[dest];
+        int prevY = node.getY();
+        int prevX = node.getX();
+        dest = path[dest];
+
+        while (dest != src) {
+            node = graph[dest];
+
+            int y = node.getY();
+            int x = node.getX();
+
+            if (y < heightMap.length - 1
+                    && x < heightMap[0].length - 1
+                    && y > 0 && x > 0) {
+                if (prevY == y && prevX != x) {
+                    heightMap[y + 1][x] = riverVal;
+                    heightMap[y - 1][x] = riverVal;
+                } else {
+                    heightMap[y][x + 1] = riverVal;
+                    heightMap[y][x - 1] = riverVal;
+                    heightMap[y + 1][x] = riverVal;
+                    heightMap[y - 1][x] = riverVal;
+                }
+                heightMap[y][x] = riverVal;
+            }
+            prevY = node.getY();
+            prevX = node.getX();
+            dest = path[dest];
+        }
+    }
+
     // Return array of shortest paths from graph node src
     // to all other nodes.
     // TODO: rewrite this with a priority queue
     public double[] dijkstra(int src) {
 
+        PriorityQueue<Node> pq = new PriorityQueue<>();
         double[] distances = new double[n];
         boolean[] included = new boolean[n];
         path = new int[n];
@@ -33,26 +77,21 @@ public class Rivers {
         }
 
         distances[src] = 0;
+        pq.add(graph[src]);
 
-        for (int i = 0; i < n - 1; i++) {
-            double minWeight = Double.MAX_VALUE;
-            int minNode = -1;
-
-            for (int v = 0; v < n; v++) {
-                if (included[v] == false && distances[v] <= minWeight) {
-                    minWeight = distances[v];
-                    minNode = v;
-                }
+        while (!pq.isEmpty()) {
+            Node node = pq.poll();
+            if (included[node.getId()]) {
+                continue;
             }
-
-            included[minNode] = true;
-
-            for (int neighborNode : neighbors[minNode].getSet()) {
-                if (!included[neighborNode]
-                        && distances[minNode] != Double.MAX_VALUE
-                        && distances[minNode] + graph[minNode][neighborNode] < distances[neighborNode]) {
-                    distances[neighborNode] = distances[minNode] + graph[minNode][neighborNode];
-                    path[neighborNode] = minNode;
+            included[node.getId()] = true;
+            for (int neighbor : neighbors[node.getId()].getSet()) {
+                double currentDist = distances[neighbor];
+                double proposal = distances[node.getId()] + graph[neighbor].getVal();
+                if (proposal < currentDist) {
+                    distances[neighbor] = proposal;
+                    path[neighbor] = node.getId();
+                    pq.add(graph[neighbor]);
                 }
             }
         }
@@ -62,12 +101,12 @@ public class Rivers {
 
     // Create adjacency matrix and neighbor sets from height map, adding 1.0
     // to original values to avoid negative values in returned graph.
-    public double[][] setup() {
+    public Node[] setup() {
 
         int rowLength = heightMap[0].length;
         int lastRow = heightMap.length - 1;
 
-        graph = new double[n][n];
+        graph = new Node[n];
         neighbors = new IntegerSet[n];
 
         for (int i = 0; i < n; i++) {
@@ -76,6 +115,8 @@ public class Rivers {
 
         // First row.
         for (int x = 1; x < rowLength - 1; x++) {
+            int y = 0;
+
             int current = x;
             int east = current + 1;
             int west = current - 1;
@@ -85,11 +126,7 @@ public class Rivers {
 
             neighbors[current].addAll(east, west, southEast, south, southWest);
 
-            graph[current][east] = heightMap[0][x + 1] + 1.0;
-            graph[current][west] = heightMap[0][x - 1] + 1.0;
-            graph[current][southEast] = heightMap[0 + 1][x + 1] + 1.0;
-            graph[current][south] = heightMap[0 + 1][x] + 1.0;
-            graph[current][southWest] = heightMap[0 + 1][x - 1] + 1.0;
+            graph[current] = new Node(heightMap[y][x] + 1.0, current, y, x);
         }
 
         // Last row.
@@ -103,15 +140,12 @@ public class Rivers {
 
             neighbors[current].addAll(east, west, northWest, north, northEast);
 
-            graph[current][east] = heightMap[lastRow][x + 1] + 1.0;
-            graph[current][west] = heightMap[lastRow][x - 1] + 1.0;
-            graph[current][northWest] = heightMap[lastRow - 1][x - 1] + 1.0;
-            graph[current][north] = heightMap[lastRow - 1][x] + 1.0;
-            graph[current][northEast] = heightMap[lastRow - 1][x + 1] + 1.0;
+            graph[current] = new Node(heightMap[lastRow][x] + 1.0, current, lastRow, x);
         }
 
         //First column.
         for (int y = 1; y < lastRow; y++) {
+            int x = 0;
             int current = y * rowLength;
             int north = current - rowLength;
             int south = current + rowLength;
@@ -121,11 +155,7 @@ public class Rivers {
 
             neighbors[current].addAll(north, south, northEast, east, southEast);
 
-            graph[current][north] = heightMap[y - 1][0] + 1.0;
-            graph[current][northEast] = heightMap[y - 1][0 + 1] + 1.0;
-            graph[current][east] = heightMap[y][0 + 1] + 1.0;
-            graph[current][southEast] = heightMap[y + 1][0 + 1] + 1.0;
-            graph[current][south] = heightMap[y + 1][0] + 1.0;
+            graph[current] = new Node(heightMap[y][x] + 1.0, current, y, x);
         }
 
         //Last column.
@@ -139,11 +169,7 @@ public class Rivers {
 
             neighbors[current].addAll(north, south, northWest, west, southWest);
 
-            graph[current][north] = heightMap[y - 1][rowLength - 1] + 1.0;
-            graph[current][northWest] = heightMap[y - 1][rowLength - 2] + 1.0;
-            graph[current][west] = heightMap[y][rowLength - 2] + 1.0;
-            graph[current][southWest] = heightMap[y + 1][rowLength - 2] + 1.0;
-            graph[current][south] = heightMap[y + 1][rowLength - 1] + 1.0;
+            graph[current] = new Node(heightMap[y][rowLength - 1] + 1.0, current, y, rowLength - 1);
         }
 
         // Inner cells.
@@ -164,14 +190,7 @@ public class Rivers {
                 neighbors[current].addAll(northWest, north, northEast,
                         east, southEast, south, southWest, west);
 
-                graph[current][northWest] = heightMap[y - 1][x - 1] + 1.0;
-                graph[current][north] = heightMap[y - 1][x] + 1.0;
-                graph[current][northEast] = heightMap[y - 1][x + 1] + 1.0;
-                graph[current][east] = heightMap[y][x + 1] + 1.0;
-                graph[current][southEast] = heightMap[y + 1][x + 1] + 1.0;
-                graph[current][south] = heightMap[y + 1][x] + 1.0;
-                graph[current][southWest] = heightMap[y + 1][x - 1] + 1.0;
-                graph[current][west] = heightMap[y][x - 1] + 1.0;
+                graph[current] = new Node(heightMap[y][x] + 1.0, current, y, x);
             }
         }
 
@@ -181,41 +200,38 @@ public class Rivers {
         int bottomLeft = n - rowLength;
         int bottomRight = n - 1;
 
-        graph[topLeft][topLeft + 1] = heightMap[0][1] + 1.0;
-        graph[topLeft][topLeft + rowLength + 1] = heightMap[1][1] + 1.0;
-        graph[topLeft][topLeft + rowLength] = heightMap[1][0] + 1.0;
+        int y = 0;
+        int x = 0;
+        graph[topLeft] = new Node(heightMap[y][x] + 1.0, topLeft, y, x);
         neighbors[topLeft].addAll(
                 topLeft + 1,
                 topLeft + rowLength + 1,
                 topLeft + rowLength);
 
-        graph[topRight][topRight - 1] = heightMap[0][rowLength - 1] + 1.0;
-        graph[topRight][topRight + rowLength - 1] = heightMap[1][heightMap[1].length - 2] + 1.0;
-        graph[topRight][topRight + rowLength] = heightMap[1][heightMap[1].length - 1] + 1.0;
+        x = rowLength - 1;
+        graph[topRight] = new Node(heightMap[y][x] + 1.0, topRight, y, x);
         neighbors[topRight].addAll(
                 topRight - 1,
                 topRight + rowLength - 1,
                 topRight + rowLength
         );
 
-        graph[bottomLeft][bottomLeft + 1] = heightMap[lastRow][1] + 1.0;
-        graph[bottomLeft][bottomLeft - rowLength + 1] = heightMap[lastRow - 1][1] + 1.0;
-        graph[bottomLeft][bottomLeft - rowLength] = heightMap[lastRow - 1][0] + 1.0;
+        y = lastRow;
+        graph[bottomRight] = new Node(heightMap[y][x] + 1.0, bottomRight, y, x);
+        neighbors[bottomRight].addAll(
+                bottomRight - 1,
+                bottomRight - rowLength - 1,
+                bottomRight - rowLength
+        );
+
+        x = 0;
+        graph[bottomLeft] = new Node(heightMap[y][x] + 1.0, bottomLeft, y, x);
         neighbors[bottomLeft].addAll(
                 bottomLeft + 1,
                 bottomLeft - rowLength + 1,
                 bottomLeft - rowLength
         );
 
-        graph[bottomRight][bottomRight - 1] = heightMap[lastRow][rowLength - 2] + 1.0;
-        graph[bottomRight][bottomRight - rowLength - 1] = heightMap[lastRow - 1][rowLength - 2] + 1.0;
-        graph[bottomRight][bottomRight - rowLength] = heightMap[lastRow - 1][rowLength - 1] + 1.0;
-        neighbors[bottomRight].addAll(
-                bottomRight - 1,
-                bottomRight - rowLength - 1,
-                bottomRight - rowLength
-        );
-        
         return graph;
     }
 

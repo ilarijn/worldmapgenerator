@@ -5,7 +5,7 @@ import wmg.util.Func;
 import wmg.util.Vector2;
 
 /**
- * Returns a 2D array or heightmap with values in range [-1.0, 1.0].
+ * Returns a 2D array with values in range [-1.0, 1.0].
  *
  */
 public class PerlinNoise {
@@ -26,7 +26,7 @@ public class PerlinNoise {
         random = new Random(seed);
     }
 
-    // Add together n iterations of attenuated noise where n is number of octaves.
+    // Add together n iterations of amplitude-adjusted noise where n is number of octaves.
     public double[][] getOctavedNoise() {
         double[][] res = new double[height][width];
         for (int octave = 0; octave < octaves; octave++) {

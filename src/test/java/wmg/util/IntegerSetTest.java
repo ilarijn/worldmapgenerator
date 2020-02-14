@@ -9,8 +9,8 @@ public class IntegerSetTest {
     public void IntegerSetTest() {
 
         IntegerSet set = new IntegerSet();
+        
         int[] arr = set.getSet();
-
         assertTrue(arr.length == 0);
         assertTrue(set.size() == 0);
         assertTrue(!set.contains(0));
@@ -23,7 +23,7 @@ public class IntegerSetTest {
         assertTrue(arr.length == 1);
         assertTrue(set.size() == 1);
 
-        set.addAll(2, 3, 3, 4, 5, 6, 7, 8, 9, 10);
+        set.addAll(1, 2, 3, 3, 4, 5, 6, 7, 8, 9);
 
         arr = set.getSet();
         assertTrue(arr.length == 10);
