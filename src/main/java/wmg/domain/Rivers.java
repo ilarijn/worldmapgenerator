@@ -20,7 +20,7 @@ public class Rivers {
 
     // Return array of shortest paths from graph node src
     // to all other nodes.
-    // TODO: write this again with a priority queue
+    // TODO: rewrite this with a priority queue
     public double[] dijkstra(int src) {
 
         double[] distances = new double[n];
@@ -209,7 +209,7 @@ public class Rivers {
 
         graph[bottomRight][bottomRight - 1] = heightMap[lastRow][rowLength - 2] + 1.0;
         graph[bottomRight][bottomRight - rowLength - 1] = heightMap[lastRow - 1][rowLength - 2] + 1.0;
-        graph[bottomRight][bottomRight - rowLength] = heightMap[lastRow][rowLength - 1] + 1.0;
+        graph[bottomRight][bottomRight - rowLength] = heightMap[lastRow - 1][rowLength - 1] + 1.0;
         neighbors[bottomRight].addAll(
                 bottomRight - 1,
                 bottomRight - rowLength - 1,

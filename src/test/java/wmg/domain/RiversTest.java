@@ -98,6 +98,10 @@ public class RiversTest {
         System.out.println("6 to 7: " + (graph[6][7]));
         System.out.println("7 to 8: " + (graph[7][8]) + "\n");
 
+        System.out.println("3 to 7: " + (graph[3][7]));
+        System.out.println("7 to 8: " + (graph[7][8]));
+        System.out.println("8 to 5: " + (graph[8][5]) + "\n");
+
         for (int i = 0; i < distances.length; i++) {
             System.out.println("Distance to node " + i + ": " + distances[i]);
         }
