@@ -23,6 +23,8 @@ public class RiversTest {
                 == Func.roundToFive(grid[1][2]));
         assertTrue(Func.roundToFive(graph[n + 1].getVal() - 1.0)
                 == Func.roundToFive(grid[1][1]));
+        assertTrue(Func.roundToFive(graph[grid.length * grid[0].length - 1].getVal() - 1.0)
+                == Func.roundToFive(grid[grid.length - 1][grid[0].length - 1]));
     }
 
     @Test
@@ -58,6 +60,7 @@ public class RiversTest {
             {2, 0, 4}
         };
         Rivers r = new Rivers(grid);
+        r.setup();
         double[] distances = r.dijkstra(0);
 
         System.out.println("\nInput grid");
@@ -69,10 +72,12 @@ public class RiversTest {
             }
             System.out.println("]");
         }
-
+        System.out.println("");
         for (int i = 0; i < distances.length; i++) {
             System.out.println("Distance to node " + i + ": " + distances[i]);
         }
+
+        assertTrue(distances[5] == 13.0);
 
         int[] path = r.getPath();
         int dest = 5;
