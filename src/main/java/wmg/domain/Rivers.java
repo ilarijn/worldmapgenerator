@@ -4,8 +4,10 @@ import java.util.PriorityQueue;
 import wmg.util.IntegerSet;
 import wmg.util.Node;
 
-// River generation by finding shortest path from source to destination.
-// Heightmap values are weights in the graph.
+/**
+ * River generation by finding shortest path from source to destination.
+ * Heightmap values are weights in the graph.
+ */
 public class Rivers {
 
     double[][] heightMap;
@@ -20,6 +22,8 @@ public class Rivers {
         n = grid.length * grid[0].length;
     }
 
+    // Run graph setup and Dijkstra's algorithm.
+    // Adjust values in the heightmap according to the returned path[].
     public void apply(int srcY, int srcX, int destY, int destX) {
 
         int src = srcY * 800 + srcX;
@@ -63,7 +67,6 @@ public class Rivers {
 
     // Return array of shortest paths from graph node src
     // to all other nodes.
-    // TODO: rewrite this with a priority queue
     public double[] dijkstra(int src) {
 
         PriorityQueue<Node> pq = new PriorityQueue<>();
@@ -99,7 +102,7 @@ public class Rivers {
         return distances;
     }
 
-    // Create adjacency matrix and neighbor sets from height map, adding 1.0
+    // Create nodes and neighbor sets from height map, adding 1.0
     // to original values to avoid negative values in returned graph.
     public Node[] setup() {
 
