@@ -24,10 +24,10 @@ public class Rivers {
 
     // Run graph setup and Dijkstra's algorithm.
     // Adjust values in the heightmap according to the returned path[].
-    public void apply(int srcY, int srcX, int destY, int destX) {
+    public void apply(int srcY, int srcX, int destY, int destX, int width) {
 
-        int src = srcY * 800 + srcX;
-        int dest = destY * 800 + destX;
+        int src = srcY * width + srcX;
+        int dest = destY * width + destX;
 
         setup();
         dijkstra(src);

@@ -118,8 +118,8 @@ public class MainWindow {
                     Integer.parseInt(seedText.getText()));
             pixels = pn.getOctavedNoise();
             Rivers r = new Rivers(pixels);
-            r.apply(280, 100, 70, 300);
-            r.apply(150, 700, 300, 400);
+            r.apply(280, 100, 70, 300, cWidth);
+            r.apply(150, 700, 300, 400, cWidth);
         } else if (algComboBox.getValue().equals(diamondSelection)) {
             DiamondSquare ds;
             if (randomCheck.isSelected()) {

@@ -3,7 +3,7 @@ package wmg.domain;
 import java.util.Random;
 
 /**
- * Returns a 2D array or heightmap with values in range [-1.0, 1.0].
+ * Returns a 2D array with values in range [-1.0, 1.0].
  *
  */
 public class DiamondSquare {
