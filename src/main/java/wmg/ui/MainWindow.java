@@ -265,7 +265,7 @@ public class MainWindow {
     private void diamondSetup() {
         sliderBox1.getChildren().clear();
         sliderBox1.getChildren().addAll(
-                makeDoubleSliderBox(thresholdSlider, "Water threshold: ", -0.4, 0.5, 0.0, 0.01));
+                makeDoubleSliderBox(thresholdSlider, "Water level: ", -0.4, 0.5, 0.0, 0.01));
 
         randomCheck.setSelected(true);
         toggleDiamondValues();

@@ -56,6 +56,7 @@ public class PerlinNoise {
 
     // Returns array of values in range [-1.0, 1.0].
     public double[][] getNoise() {
+        if (scale == 0) scale = 1;
         gridHeight = (int) Math.ceil(height / scale) + 1;
         gridWidth = (int) Math.ceil(width / scale) + 1;
         grid = new Vector2[gridHeight][gridWidth];
@@ -83,7 +84,7 @@ public class PerlinNoise {
     // Get noise value in range [-1, 1]  at coordinate (x, y).
     public double getValue(int y, int x) {
 
-        // Figure out cell of coordinate, relative to current cell size.
+        // Figure out cell of coordinate, relative to current scale.
         int cellY = (int) Math.floor(y / scale);
         int cellX = (int) Math.floor(x / scale);
 
