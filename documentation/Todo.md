@@ -1,7 +1,7 @@
 ### To do list
 
 #### Week 6
-* [ ] PriorityQueue or similar
+* [x] PriorityQueue or similar
 * [ ] Random
 * [ ] Math functions
 * [ ] More documentation (incl. Javadoc)

@@ -1,6 +1,11 @@
 package wmg.util;
 
-public class Node implements Comparable<Node> {
+/**
+ * Nodes for a graph created from a heightmap.
+ * 
+ */
+
+public class Node {
 
     private final double val;
     private final int id;
@@ -29,10 +34,4 @@ public class Node implements Comparable<Node> {
     public int getX() {
         return x;
     }
-
-    @Override
-    public int compareTo(Node n) {
-        return Double.compare(this.val, n.val);
-    }
-
 }

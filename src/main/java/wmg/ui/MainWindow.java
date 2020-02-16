@@ -119,7 +119,8 @@ public class MainWindow {
             pixels = pn.getOctavedNoise();
             Rivers r = new Rivers(pixels);
             r.apply(280, 100, 70, 300, cWidth);
-            r.apply(150, 700, 300, 400, cWidth);
+            r.apply(150, 700, 374, 604, cWidth);
+         
         } else if (algComboBox.getValue().equals(diamondSelection)) {
             DiamondSquare ds;
             if (randomCheck.isSelected()) {
@@ -153,8 +154,10 @@ public class MainWindow {
                         pw.setColor(x, y, Color.GREEN);
                     } else if (value < threshold + 0.35) {
                         pw.setColor(x, y, Color.DARKGREEN);
-                    } else {
+                    } else if (value < threshold + 0.55) {
                         pw.setColor(x, y, Color.GRAY);
+                    } else {
+                        pw.setColor(x, y, Color.ANTIQUEWHITE);
                     }
                 }
             }

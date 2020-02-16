@@ -3,17 +3,17 @@ package wmg.util;
 public class IntegerSet {
 
     int[] set;
-    int ptr;
+    int n;
 
     public IntegerSet() {
-        ptr = 0;
+        n = 0;
         set = new int[8];
     }
 
     public void add(int x) {
         if (!this.contains(x)) {
-            if (ptr >= set.length) expand();
-            set[ptr++] = x;
+            if (n >= set.length) expand();
+            set[n++] = x;
         }
     }
 
@@ -28,7 +28,7 @@ public class IntegerSet {
     }
 
     public boolean contains(int x) {
-        for (int i = 0; i < ptr; i++) {
+        for (int i = 0; i < n; i++) {
             if (set[i] == x) return true;            
         }
         return false;
@@ -39,12 +39,12 @@ public class IntegerSet {
     }
 
     public int size() {
-        return ptr;
+        return n;
     }
 
     public int[] getSet() {
-        int[] res = new int[ptr];
-        for (int i = 0; i < ptr; i++) res[i] = set[i];
+        int[] res = new int[n];
+        for (int i = 0; i < n; i++) res[i] = set[i];
         return res;
     }
 }

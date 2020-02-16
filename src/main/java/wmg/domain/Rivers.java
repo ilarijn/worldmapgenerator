@@ -1,8 +1,8 @@
 package wmg.domain;
 
-import java.util.PriorityQueue;
 import wmg.util.IntegerSet;
 import wmg.util.Node;
+import wmg.util.NodePQ;
 
 /**
  * River generation by finding shortest path from source to destination.
@@ -69,7 +69,7 @@ public class Rivers {
     // to all other nodes.
     public double[] dijkstra(int src) {
 
-        PriorityQueue<Node> pq = new PriorityQueue<>();
+        NodePQ pq = new NodePQ();
         double[] distances = new double[n];
         boolean[] included = new boolean[n];
         path = new int[n];
@@ -84,16 +84,17 @@ public class Rivers {
 
         while (!pq.isEmpty()) {
             Node node = pq.poll();
-            if (included[node.getId()]) {
+            int currentIndex = node.getId();
+            if (included[currentIndex]) {
                 continue;
             }
-            included[node.getId()] = true;
-            for (int neighbor : neighbors[node.getId()].getSet()) {
+            included[currentIndex] = true;
+            for (int neighbor : neighbors[currentIndex].getSet()) {
                 double currentDist = distances[neighbor];
-                double proposal = distances[node.getId()] + graph[neighbor].getVal();
+                double proposal = distances[currentIndex] + graph[neighbor].getVal();
                 if (proposal < currentDist) {
                     distances[neighbor] = proposal;
-                    path[neighbor] = node.getId();
+                    path[neighbor] = currentIndex;
                     pq.add(graph[neighbor]);
                 }
             }
