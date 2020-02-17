@@ -6,7 +6,7 @@ import org.junit.Test;
 public class IntegerSetTest {
 
     @Test
-    public void IntegerSetTest() {
+    public void integerSetTest() {
 
         IntegerSet set = new IntegerSet();
         

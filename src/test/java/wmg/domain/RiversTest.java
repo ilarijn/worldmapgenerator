@@ -11,10 +11,9 @@ public class RiversTest {
 
     @Test
     public void graphIsValid() {
-        int n = 4;
-        DiamondSquare ds = new DiamondSquare(n, n, 0);
+        int n = 5;
+        DiamondSquare ds = new DiamondSquare(n, 1);
         double[][] grid = ds.getNoise();
-        n++;
 
         Rivers r = new Rivers(grid);
         Node[] graph = r.setup();
@@ -29,10 +28,9 @@ public class RiversTest {
 
     @Test
     public void graphNeighborsAreValid() {
-        int n = 4;
-        DiamondSquare ds = new DiamondSquare(n, n, 0);
+        int n = 5;
+        DiamondSquare ds = new DiamondSquare(n, 0);
         double[][] grid = ds.getNoise();
-        n++;
 
         Rivers r = new Rivers(grid);
         r.setup();
@@ -76,17 +74,38 @@ public class RiversTest {
         for (int i = 0; i < distances.length; i++) {
             System.out.println("Distance to node " + i + ": " + distances[i]);
         }
-
-        assertTrue(distances[5] == 13.0);
-
         int[] path = r.getPath();
         int dest = 5;
-
         System.out.print("\n" + dest + " to 0:\n" + dest);
         while (dest != 0) {
             dest = path[dest];
             System.out.print(" -> " + dest);
         }
         System.out.println("\nNeighbors of 0: " + Arrays.toString(r.getNeighbors()[0].getSet()));
+
+        assertTrue(distances[5] == 13.0);
+        assertTrue(path[5] == 7);
+        assertTrue(path[7] == 3);
+        assertTrue(path[3] == 0);
+    }
+
+    @Test
+    public void riverIsApplied() {
+        double[][] grid = new double[][]{
+            {0, 2, 2, 3, 1},
+            {0, 1, 10, 1, 3},
+            {1, 1, 10, 2, 4},
+            {2, 0, 4, 5, 6},
+            {2, 0, 4, 5, 1}
+        };
+        Rivers r = new Rivers(grid);
+        double rv = -0.2;
+        r.apply(1, 1, 3, 3, rv);
+        assertTrue(grid[1][1] == rv);
+        assertTrue(grid[2][0] == rv);
+        assertTrue(grid[2][1] == rv);
+        assertTrue(grid[2][2] == rv);
+        assertTrue(grid[3][1] == rv);
+        assertTrue(grid[3][2] == rv);
     }
 }

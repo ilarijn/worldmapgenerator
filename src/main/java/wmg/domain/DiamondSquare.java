@@ -1,5 +1,6 @@
 package wmg.domain;
 
+import wmg.util.Func;
 import wmg.util.Random;
 
 /**
@@ -54,7 +55,7 @@ public class DiamondSquare {
                             + grid[y + sideLength][x + sideLength])
                             / 4;
 
-                    double range = 1.0 - Math.abs(avg);
+                    double range = 1.0 - Func.abs(avg);
                     avg += (random.nextDouble() * (2 * range) - range) * randomWeight;
 
                     grid[y + halfSide][x + halfSide] = avg;
@@ -72,7 +73,7 @@ public class DiamondSquare {
                             + grid[(y - halfSide + size - 1) % (size - 1)][x])
                             / 4;
 
-                    double range = 1.0 - Math.abs(avg);
+                    double range = 1.0 - Func.abs(avg);
                     avg += (random.nextDouble() * (2 * range) - range) * randomWeight;
 
                     grid[y][x] = avg;

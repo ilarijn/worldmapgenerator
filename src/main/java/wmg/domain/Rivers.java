@@ -24,15 +24,13 @@ public class Rivers {
 
     // Run graph setup and Dijkstra's algorithm.
     // Adjust values in the heightmap according to the returned path[].
-    public void apply(int srcY, int srcX, int destY, int destX, int width) {
-
-        int src = srcY * width + srcX;
-        int dest = destY * width + destX;
+    public void apply(int srcY, int srcX, int destY, int destX, double riverVal) {
+        int rowWidth = heightMap[0].length;
+        int src = srcY * rowWidth + srcX;
+        int dest = destY * rowWidth + destX;
 
         setup();
         dijkstra(src);
-
-        double riverVal = -0.2;
 
         Node node = graph[dest];
         int prevY = node.getY();
@@ -46,7 +44,7 @@ public class Rivers {
             int x = node.getX();
 
             if (y < heightMap.length - 1
-                    && x < heightMap[0].length - 1
+                    && x < rowWidth - 1
                     && y > 0 && x > 0) {
                 if (prevY == y && prevX != x) {
                     heightMap[y + 1][x] = riverVal;

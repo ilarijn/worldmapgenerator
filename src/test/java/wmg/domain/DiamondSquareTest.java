@@ -7,7 +7,7 @@ public class DiamondSquareTest {
 
     @Test
     public void dsValuesAreValid() {
-        DiamondSquare ds = new DiamondSquare(100, 100, 1);
+        DiamondSquare ds = new DiamondSquare(129, 1);
         double[][] pixels = ds.getNoise();
         for (int y = 0; y < pixels.length; y++) {
             for (int x = 0; x < pixels[y].length; x++) {
@@ -18,7 +18,7 @@ public class DiamondSquareTest {
 
     @Test
     public void dsValuesAreValidFixed() {
-        DiamondSquare ds = new DiamondSquare(100, 100, 1, 0.99, 0.99, 0.99, 0.99);
+        DiamondSquare ds = new DiamondSquare(129, 1, 0.99, 0.99, 0.99, 0.99);
         double[][] pixels = ds.getNoise();
         for (int y = 0; y < pixels.length; y++) {
             for (int x = 0; x < pixels[y].length; x++) {
