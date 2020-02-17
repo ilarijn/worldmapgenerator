@@ -1,5 +1,6 @@
-## Implementation details
+Implementation details
 ------
+
 The application draws two-dimensional arrays, or heightmaps, on a JavaFX canvas where each array value is a pixel that is assigned an appropriate color depending on display mode. 
 
 There are two algorithms implemented for the generation of maps, Perlin noise and diamond-square. Both are so-called noise functions and produce a 2D array of double-precision values.
@@ -8,7 +9,7 @@ There is also a class for adding rivers to a heightmap. This works by using Dijk
 
 Below are given descriptions and details related to the implementation of algorithms, data structures and functions used in this project.
 
-### Algorithms
+Algorithms
 ------
 
 #### Perlin noise
@@ -21,7 +22,7 @@ Typically we add together and divide by maximum value several iterations of nois
 Perlin noise has a time complexity of O(2^n) where n equals number of dimensions, with significant constant factors due to the application of math functions and several layers of noise. In practice, the time complexity should be O(n) for this project.
 
 #### Diamond-square algorithm
-The diamond-square algorithm works by first assigning values to the four corner points of a 2D array of size 2^n+1. After this, we alternately compute the midpoints of each "square" and "diamond" formed in the grid by existing points. Each midpoint value is the average of its four corner points plus a random value. The below image illustrates each step of the algorithm, from the initial assignment of corner values followed by the square and diamond steps:
+The diamond-square algorithm works by first assigning values to the four corner points of a 2D array of size 2^n+1. After this, we alternately compute the midpoints of each "square" and "diamond" formed in the grid by existing points. Each midpoint value is the average of its four corner points plus a random value. The below image illustrates each step of the algorithm, from the initial assignment of corner values followed by the diamond and square steps:
 
 ![Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Diamond_Square.svg/640px-Diamond_Square.svg.png "Christopher Ewin / CC BY-SA 4.0")
 
@@ -30,7 +31,7 @@ The time complexity of diamond-square is O(n) where n is the number of pixels in
 #### Dijkstra's algorithm
 Depending on the type of queue structure used, Dijkstra's algorithm runs in time O(n^2) or O(e + n log n) where n is nodes and e is edges.
 
-### Data structures
+Data structures
 ------
 
 #### Min heap priority queue
@@ -55,7 +56,7 @@ A set structure for integers. Used in recording and retrieving node neighbors fo
 #### Random
 A pseudorandom number generator based on the Mersenne Twister algorithm.
 
-### Sources
+Sources
 ------
 
 - https://en.wikipedia.org/wiki/Perlin_noise
