@@ -1,6 +1,6 @@
 package wmg.domain;
 
-import java.util.Random;
+import wmg.util.Random;
 
 /**
  * Returns a 2D array with values in range [-1.0, 1.0].

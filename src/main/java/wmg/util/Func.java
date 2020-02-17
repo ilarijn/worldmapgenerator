@@ -22,6 +22,21 @@ public class Func {
         double angle = val * 2 * Math.PI;
         return new Vector2(Math.cos(angle), Math.sin(angle));
     }
+    
+    public static double pow(double x, double y) {
+        if (y == 0) return 1;
+        if (y == 1) return x;
+        double res = x;
+        for (int i = 2; i <= y; i++) {
+            res *= x;
+        }
+        return res;
+    }
+    
+    public static double abs(double x) {
+        if (x >= 0) return x;
+        else return (x * (-1));
+    }
 
     public static double roundToFive(double val) {
         return (double) Math.round(val * 100000d) / 100000d;

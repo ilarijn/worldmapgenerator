@@ -1,6 +1,6 @@
 package wmg.domain;
 
-import java.util.Random;
+import wmg.util.Random;
 import wmg.util.Func;
 import wmg.util.Vector2;
 
@@ -30,8 +30,8 @@ public class PerlinNoise {
     public double[][] getOctavedNoise() {
         double[][] res = new double[height][width];
         for (int octave = 0; octave < octaves; octave++) {
-            int octaveScale = (int) (scale * Math.pow(0.5, octave));
-            double octaveAmp = Math.pow(amplitude, octave);
+            int octaveScale = (int) (scale * Func.pow(0.5, octave));
+            double octaveAmp = Func.pow(amplitude, octave);
             int temp = scale;
             scale = octaveScale;
             double[][] noise = getNoise();
@@ -44,7 +44,7 @@ public class PerlinNoise {
         }
         double maxValue = 0;
         for (int octave = 0; octave < octaves; octave++) {
-            maxValue += Math.pow(amplitude, octave);
+            maxValue += Func.pow(amplitude, octave);
         }
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -56,7 +56,9 @@ public class PerlinNoise {
 
     // Returns array of values in range [-1.0, 1.0].
     public double[][] getNoise() {
-        if (scale == 0) scale = 1;
+        if (scale == 0) {
+            scale = 1;
+        }
         gridHeight = (int) Math.ceil(height / scale) + 1;
         gridWidth = (int) Math.ceil(width / scale) + 1;
         grid = new Vector2[gridHeight][gridWidth];
@@ -76,7 +78,8 @@ public class PerlinNoise {
     public void generateGradients() {
         for (int y = 0; y < gridHeight; y++) {
             for (int x = 0; x < gridWidth; x++) {
-                grid[y][x] = Func.getVector(random.nextDouble());
+                double val = random.nextDouble();
+                grid[y][x] = Func.getVector(val);
             }
         }
     }
