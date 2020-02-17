@@ -120,14 +120,19 @@ public class MainWindow {
             Rivers r = new Rivers(pixels);
             r.apply(280, 100, 70, 300, cWidth);
             r.apply(150, 700, 374, 604, cWidth);
-         
+
         } else if (algComboBox.getValue().equals(diamondSelection)) {
             DiamondSquare ds;
+            // Grid size must be 2^n+1, the power of 2 greater to or equal than the 
+            // larger of the given height and width values + 1.
+            int size = cHeight > cWidth ? cHeight : cWidth;
+            size = (1 << (int) Math.ceil(Math.log(size) / Math.log(2))) + 1;
             if (randomCheck.isSelected()) {
-                ds = new DiamondSquare(cHeight, cWidth,
-                        Integer.parseInt(seedText.getText()));
+                ds = new DiamondSquare(size,
+                        Integer.parseInt(seedText.getText())
+                );
             } else {
-                ds = new DiamondSquare(cHeight, cWidth,
+                ds = new DiamondSquare(size,
                         Integer.parseInt(seedText.getText()),
                         Double.parseDouble(tlNumber.getText()),
                         Double.parseDouble(trNumber.getText()),

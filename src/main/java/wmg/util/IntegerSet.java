@@ -1,7 +1,7 @@
 package wmg.util;
 
 /**
- * Set structure for integers. Used to record node neighbors (max 8). 
+ * Set structure for integers. Used to record and iterate through node neighbors. 
  */
 public class IntegerSet {
 

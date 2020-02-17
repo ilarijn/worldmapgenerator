@@ -57,6 +57,6 @@ public class Random {
     }
 
     public double nextDouble() {
-        return (getRandom() >> 11) * (1.0 / 9007199254740992.0) * 2.0;
+        return (getRandom() >> 11) * (2.0 / 9007199254740992.0);
     }
 }

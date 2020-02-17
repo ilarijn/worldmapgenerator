@@ -13,15 +13,10 @@ public class DiamondSquare {
     Random random;
 
     // Random initial corner values.
-    public DiamondSquare(int height, int width, int seed) {
-        random = new Random(seed);
-
-        // Grid size is 2^n+1, the power of 2 greater to or equal than the 
-        // larger of the given height and width values + 1.
-        size = height > width ? height : width;
-        size = (1 << (int) Math.ceil(Math.log(size) / Math.log(2))) + 1;
-        
+    public DiamondSquare(int size, int seed) {
+        this.size = size;
         grid = new double[size][size];
+        random = new Random(seed);
 
         grid[0][0] = random.nextDouble() * 2.0 - 1.0;
         grid[size - 1][0] = random.nextDouble() * 2.0 - 1.0;
@@ -30,13 +25,10 @@ public class DiamondSquare {
     }
 
     // Fixed initial corner values.
-    public DiamondSquare(int height, int width, int seed, double tl, double tr, double bl, double br) {
-        random = new Random(seed);
-
-        size = height > width ? height : width;
-        size = (1 << (int) Math.ceil(Math.log(size) / Math.log(2))) + 1;
-        
+    public DiamondSquare(int size, int seed, double tl, double tr, double bl, double br) {
+        this.size = size;
         grid = new double[size][size];
+        random = new Random(seed);
 
         grid[0][0] = tl;
         grid[0][size - 1] = tr;
