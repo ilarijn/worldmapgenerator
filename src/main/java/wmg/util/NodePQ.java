@@ -1,8 +1,8 @@
 package wmg.util;
 
 /**
- * A min heap priority queue for Node objects.
- * 
+ * Min heap priority queue for Node objects.
+ * Based on the MaxPQ class in Sedgewick & Wayne: Algorithms 4th ed.
  */
 
 public class NodePQ {

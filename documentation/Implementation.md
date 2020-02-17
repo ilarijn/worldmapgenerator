@@ -5,14 +5,34 @@ There are two algorithms implemented for the generation of maps, Perlin noise an
 
 There is also a class for adding rivers to a heightmap. This works by using Dijkstra's algorithm to find shortest paths in a graph created from the heightmap and adjusting the original's values on the river's path.
 
-#### Perlin noise
+Below are given descriptions and details related to the implementation of algorithms and data structures used in this project. Last are listed any that were not implemented along with the reasons thereof. 
+
+#### Algorithms
+
+##### Perlin noise
+Perlin noise works by filling an n-dimensional grid with n-dimensional random vectors on the basis of which noise values are determined. Noise value is computed by first determining which cell the grid point falls into. Cell is a separate concept from grid point, and is relative to current scale: i.e. there are typically multiple grid points located inside a cell. Then, we compute the dot products between the distance vector of the given point and each of the random vectors at the corners of the corresponding grid point. Finally, we interpolate between the dot products and return the value.
+
+Typically we add together n iterations of noise, where each iteration is called an octave. The scale and amplitude (a factor applied to noise values to affect their range) values are adjusted for each successive octave. This layering causes the "fractal-like" effect and creates maps with more details.  
+
 Perlin noise has a time complexity of O(2^n) where n equals number of dimensions, with significant constant factors due to the application of math functions and several layers of noise. In practice, the time complexity should be O(n) for this project.
 
-#### Diamond-square algorithm
+##### Diamond-square algorithm
 The time complexity of diamond-square is O(n) where n is the number of pixels in the map.
 
-#### Dijkstra's algorithm
+##### Dijkstra's algorithm
 Depending on the type of queue structure used, Dijkstra's algorithm runs in time O(n^2) or O(e + n log n) where n is nodes and e is edges.
+
+#### Data structures
+
+##### Min heap priority queue
+##### Integer set
+##### Random
+
+#### Exceptions
+
+##### Math.log
+Rewriting this function was beyond the scope of this project. It is mainly used for convenience in getting a right size square grid from the UI canvas for the diamond-square algorithm. For reference, the logarithm function used by Java can be found here: https://github.com/openjdk-mirror/jdk/blob/jdk8u/jdk8u/master/src/share/native/java/lang/fdlibm/src/e_log.c
+
 
 #### Sources
 - https://en.wikipedia.org/wiki/Perlin_noise

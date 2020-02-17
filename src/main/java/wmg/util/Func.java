@@ -1,6 +1,12 @@
 package wmg.util;
 
+/**
+ * Collection of math functions.
+ */
+
 public class Func {
+
+    public final static double PI = 3.141592653589793;
 
     public static double lerp(double a, double b, double w) {
         return (1.0 - w) * a + w * b;
@@ -19,23 +25,26 @@ public class Func {
     }
 
     public static Vector2 getVector(double val) {
-        double angle = val * 2 * Math.PI;
+        double angle = val * 2 * PI;
         return new Vector2(Math.cos(angle), Math.sin(angle));
     }
-    
+
     public static double pow(double x, double y) {
-        if (y == 0) return 1;
-        if (y == 1) return x;
+        if (y == 0) {
+            return 1;
+        }
+        if (y == 1) {
+            return x;
+        }
         double res = x;
         for (int i = 2; i <= y; i++) {
             res *= x;
         }
         return res;
     }
-    
+
     public static double abs(double x) {
-        if (x >= 0) return x;
-        else return (x * (-1));
+        return (x < 0) ? (x * (-1)) : x;
     }
 
     public static double roundToFive(double val) {

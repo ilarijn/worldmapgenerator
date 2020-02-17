@@ -88,8 +88,8 @@ public class PerlinNoise {
     public double getValue(int y, int x) {
 
         // Figure out cell of coordinate, relative to current scale.
-        int cellY = (int) Math.floor(y / scale);
-        int cellX = (int) Math.floor(x / scale);
+        int cellY = y / scale;
+        int cellX = x / scale;
 
         // Coordinate inside cell.
         double relativeY = (y - cellY * scale * 1.0) / scale;

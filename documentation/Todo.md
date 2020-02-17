@@ -2,7 +2,7 @@
 
 #### Week 6
 * [x] PriorityQueue or similar
-* [ ] Random
+* [x] Random
 * [ ] Math functions
 * [ ] More documentation (incl. Javadoc)
 * [ ] Better test coverage
