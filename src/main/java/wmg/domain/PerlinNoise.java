@@ -59,8 +59,8 @@ public class PerlinNoise {
         if (scale == 0) {
             scale = 1;
         }
-        gridHeight = (int) Math.ceil(height / scale) + 1;
-        gridWidth = (int) Math.ceil(width / scale) + 1;
+        gridHeight = Func.ceil(height / scale) + 1;
+        gridWidth = Func.ceil(width / scale) + 1;
         grid = new Vector2[gridHeight][gridWidth];
 
         generateGradients();

@@ -30,7 +30,7 @@ public class Rivers {
         int dest = destY * rowWidth + destX;
 
         setup();
-        dijkstra(src, dest);
+        dijkstra(src, dest, false);
 
         Node node = graph[dest];
         int prevY = node.getY();
@@ -65,7 +65,7 @@ public class Rivers {
 
     // Return array of shortest paths from graph node src
     // to all other nodes.
-    public double[] dijkstra(int src, int dest) {
+    public double[] dijkstra(int src, int dest, boolean all) {
 
         NodePQ pq = new NodePQ();
         double[] distances = new double[n];
@@ -83,7 +83,7 @@ public class Rivers {
         while (!pq.isEmpty()) {
             Node node = pq.poll();
             int currentIndex = node.getId();
-            if (currentIndex == dest) break;
+            if (currentIndex == dest && !all) break;
             if (included[currentIndex]) {
                 continue;
             }

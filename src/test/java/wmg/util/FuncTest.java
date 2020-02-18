@@ -17,4 +17,13 @@ public class FuncTest {
         }
     }
 
+    @Test
+    public void ceilTest() {
+        double a = 3.43;
+        double b = 3.00;
+
+        assertTrue(Func.ceil(a) == 4);
+        assertTrue(Func.ceil(b) == 3);
+    }
+
 }

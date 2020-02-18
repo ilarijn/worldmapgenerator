@@ -3,14 +3,17 @@
 #### Week 6
 * [x] PriorityQueue or similar
 * [x] Random
-* [ ] Math functions
-* [ ] More documentation (incl. Javadoc)
-* [ ] Better test coverage
+* [x] Math functions
+* [x] Implementation doc
+* [x] Better test coverage
+* [ ] Test doc
+* [ ] Javadoc
 
 #### Week 7 ->
-* [ ] More documentation
-* [ ] More tests
-* [ ] Cleaner UI code
+* [ ] Test doc
+* [ ] Javadoc
+* [ ] Instructions
+* [ ] Better test coverage
+* [ ] Clean UI code
 * [ ] Rivers for DS
-* [ ] Cleaner graph creation
-* [ ] Better rivers
+* [ ] Better rivers?

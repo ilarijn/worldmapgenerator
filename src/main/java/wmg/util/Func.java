@@ -46,6 +46,12 @@ public class Func {
     public static double abs(double x) {
         return (x < 0) ? (x * (-1)) : x;
     }
+    
+    public static int ceil(double x) {
+        int x_int = (int) x;
+        if (x_int == x) return x_int;
+        else return (x_int + 1);
+    }
 
     public static double roundToFive(double val) {
         return (double) Math.round(val * 100000d) / 100000d;

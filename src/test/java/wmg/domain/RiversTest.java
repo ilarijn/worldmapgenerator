@@ -59,7 +59,7 @@ public class RiversTest {
         };
         Rivers r = new Rivers(grid);
         r.setup();
-        double[] distances = r.dijkstra(0);
+        double[] distances = r.dijkstra(0, 1, true);
 
         System.out.println("\nDijkstra input grid");
         System.out.println("*******************");
