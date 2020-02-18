@@ -61,8 +61,8 @@ public class RiversTest {
         r.setup();
         double[] distances = r.dijkstra(0);
 
-        System.out.println("\nInput grid");
-        System.out.println("**********");
+        System.out.println("\nDijkstra input grid");
+        System.out.println("*******************");
         for (double[] row : grid) {
             System.out.print("[");
             for (double d : row) {
@@ -76,13 +76,13 @@ public class RiversTest {
         }
         int[] path = r.getPath();
         int dest = 5;
-        System.out.print("\n" + dest + " to 0:\n" + dest);
+        System.out.print("\nRoute from " + dest + " to 0: " + dest);
         while (dest != 0) {
             dest = path[dest];
             System.out.print(" -> " + dest);
         }
-        System.out.println("\nNeighbors of 0: " + Arrays.toString(r.getNeighbors()[0].getSet()));
-
+        System.out.println("\n\nNeighbors of 0: " + Arrays.toString(r.getNeighbors()[0].getSet()));
+        
         assertTrue(distances[5] == 13.0);
         assertTrue(path[5] == 7);
         assertTrue(path[7] == 3);

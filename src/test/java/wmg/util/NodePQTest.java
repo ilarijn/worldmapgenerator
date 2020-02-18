@@ -6,7 +6,7 @@ import org.junit.Test;
 public class NodePQTest {
 
     @Test
-    public void smallestIsHighest() {
+    public void nodePQTest() {
         Node n1 = new Node(0.8, 1, 3, 4);
         Node n2 = new Node(0.2, 2, 5, 44);
         Node n3 = new Node(0.4, 3, 2, 2);

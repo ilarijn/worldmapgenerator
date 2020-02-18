@@ -159,7 +159,7 @@ public class MainWindow {
                         pw.setColor(x, y, Color.GREEN);
                     } else if (value < threshold + 0.35) {
                         pw.setColor(x, y, Color.DARKGREEN);
-                    } else if (value < threshold + 0.55) {
+                    } else if (value < threshold + 0.60) {
                         pw.setColor(x, y, Color.GRAY);
                     } else {
                         pw.setColor(x, y, Color.ANTIQUEWHITE);
