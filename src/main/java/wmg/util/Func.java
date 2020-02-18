@@ -30,16 +30,10 @@ public class Func {
     }
 
     public static double pow(double x, double y) {
-        if (y == 0) {
-            return 1;
-        }
-        if (y == 1) {
-            return x;
-        }
+        if (y == 0) return 1;
+        if (y == 1) return x;
         double res = x;
-        for (int i = 2; i <= y; i++) {
-            res *= x;
-        }
+        for (int i = 2; i <= y; i++) res *= x;
         return res;
     }
 
@@ -52,9 +46,4 @@ public class Func {
         if (x_int == x) return x_int;
         else return (x_int + 1);
     }
-
-    public static double roundToFive(double val) {
-        return (double) Math.round(val * 100000d) / 100000d;
-    }
-
 }

@@ -83,7 +83,9 @@ public class Rivers {
         while (!pq.isEmpty()) {
             Node node = pq.poll();
             int currentIndex = node.getId();
-            if (currentIndex == dest && !all) break;
+            if (currentIndex == dest && !all) {
+                break;
+            }
             if (included[currentIndex]) {
                 continue;
             }
@@ -98,7 +100,6 @@ public class Rivers {
                 }
             }
         }
-
         return distances;
     }
 

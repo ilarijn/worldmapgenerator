@@ -3,7 +3,7 @@ Implementation details
 
 The application draws two-dimensional arrays, or heightmaps, on a JavaFX canvas where each array value is a pixel that is assigned an appropriate color depending on display mode. 
 
-There are two algorithms implemented for the generation of maps, Perlin noise and diamond-square. Both are so-called noise functions and produce a 2D array of double-precision values.
+There are two algorithms implemented for the generation of maps, Perlin noise and diamond-square. Both are so-called noise functions and produce a 2D array of values in the range [-1.0, 1.0].
 
 There is also a class for adding rivers to a heightmap. This works by using Dijkstra's algorithm to find shortest paths in a graph created from the heightmap and adjusting the original's values on the river's path.
 
@@ -29,9 +29,9 @@ The diamond-square algorithm works by first assigning values to the four corner 
 The time complexity of diamond-square is O(n) where n is the number of pixels in the map.
 
 ### Dijkstra's algorithm
-Dijkstra's algorithm is used to find shortest paths between nodes in a graph. Here it is used to generate rivers in a heightmap. The heightmap array is converted into a graph where each array point has an incoming and outgoing edge from and to adjacent array points. The weight of an edge is the value of the heightmap point corresponding to the destination node.
+Dijkstra's algorithm is used to find shortest paths between nodes in a graph. Here it is used to generate rivers in a heightmap. The heightmap array is converted into a graph where each array point has an incoming and outgoing edge from and to each adjacent array point. The weight of an edge is the value of the heightmap point corresponding to the destination node (+1.0 to avoid negative values in the graph).
 
-For example, the array {{0.5, 0.2, 0.1}, {1.0, 0.4, 0.6}, {0.8, 0.9, 0.7}} would have the following edges and weights:
+For example, the heightmap {{-0.5, -0.8, -0.9}, {0.0, 0.4, -0.4}, {0.7, 0.2, -0.3}} would have the following edges and weights:
 
 ![Graph diagram](graph.png)
 

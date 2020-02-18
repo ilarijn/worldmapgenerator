@@ -11,7 +11,7 @@ public class NodePQ {
     private int n;
 
     public NodePQ() {
-        pq = new Node[200_001];
+        pq = new Node[30_001];
         n = 0;
     }
 
@@ -73,6 +73,10 @@ public class NodePQ {
             }
             pq = temp;
         }
+    }
+   
+    public int size() {
+        return n;
     }
 
 }

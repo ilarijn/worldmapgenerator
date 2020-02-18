@@ -3,7 +3,6 @@ package wmg.domain;
 import java.util.Arrays;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import wmg.util.Func;
 import wmg.util.IntegerSet;
 import wmg.util.Node;
 
@@ -18,12 +17,12 @@ public class RiversTest {
         Rivers r = new Rivers(grid);
         Node[] graph = r.setup();
 
-        assertTrue(Func.roundToFive(graph[n + 2].getVal() - 1.0)
-                == Func.roundToFive(grid[1][2]));
-        assertTrue(Func.roundToFive(graph[n + 1].getVal() - 1.0)
-                == Func.roundToFive(grid[1][1]));
-        assertTrue(Func.roundToFive(graph[grid.length * grid[0].length - 1].getVal() - 1.0)
-                == Func.roundToFive(grid[grid.length - 1][grid[0].length - 1]));
+        assertTrue(roundToFive(graph[n + 2].getVal() - 1.0)
+                == roundToFive(grid[1][2]));
+        assertTrue(roundToFive(graph[n + 1].getVal() - 1.0)
+                == roundToFive(grid[1][1]));
+        assertTrue(roundToFive(graph[grid.length * grid[0].length - 1].getVal() - 1.0)
+                == roundToFive(grid[grid.length - 1][grid[0].length - 1]));
     }
 
     @Test
@@ -82,7 +81,7 @@ public class RiversTest {
             System.out.print(" -> " + dest);
         }
         System.out.println("\n\nNeighbors of 0: " + Arrays.toString(r.getNeighbors()[0].getSet()));
-        
+
         assertTrue(distances[5] == 13.0);
         assertTrue(path[5] == 7);
         assertTrue(path[7] == 3);
@@ -107,5 +106,9 @@ public class RiversTest {
         assertTrue(grid[2][2] == rv);
         assertTrue(grid[3][1] == rv);
         assertTrue(grid[3][2] == rv);
+    }
+
+    public static double roundToFive(double val) {
+        return (double) Math.round(val * 100000d) / 100000d;
     }
 }
