@@ -80,7 +80,7 @@ public class RiversTest {
             dest = path[dest];
             System.out.print(" -> " + dest);
         }
-        System.out.println("\n\nNeighbors of 0: " + Arrays.toString(r.getNeighbors()[0].getSet()));
+        System.out.println("\n\nNeighbors of 3: " + Arrays.toString(r.getNeighbors()[3].getSet()));
 
         assertTrue(distances[5] == 13.0);
         assertTrue(path[5] == 7);
