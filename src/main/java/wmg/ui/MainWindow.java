@@ -43,9 +43,14 @@ public class MainWindow {
 
     int width = 800;
     int height = 580;
+    
 
-    final BorderPane layout = new BorderPane();
-    final Scene scene = new Scene(layout, this.width - 1, this.height);
+    /***********************************
+     * UI COMPONENTS                   * 
+     ***********************************/
+    
+    final BorderPane root = new BorderPane();
+    final Scene scene = new Scene(root, this.width - 1, this.height);
 
     final Canvas canvas = new Canvas(this.width, this.height - 150);
     final GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -103,12 +108,18 @@ public class MainWindow {
     final VBox cornerBox = new VBox(cornerLabel, topNumberBox, botNumberBox);
 
     final HBox bottomBar = new HBox();
+    
 
+    /***********************************
+     * EVENT HANDLERS                  * 
+     ***********************************/
+    
     // Generate a map or grayscale noise according to given parameters
     final EventHandler<ActionEvent> generateAction = (ActionEvent event) -> {
         int cHeight = (int) canvas.getHeight();
         int cWidth = (int) canvas.getWidth();
         double[][] pixels = new double[0][0];
+
         if (algComboBox.getValue().equals(perlinSelection)) {
             PerlinNoise pn = new PerlinNoise(cHeight, cWidth,
                     (int) cellSlider.getValue(),
@@ -123,25 +134,26 @@ public class MainWindow {
 
         } else if (algComboBox.getValue().equals(diamondSelection)) {
             DiamondSquare ds;
+
             // Grid size must be 2^n+1, the power of 2 greater to or equal than the 
             // larger of the given height and width values + 1.
             int size = cHeight > cWidth ? cHeight : cWidth;
             size = (1 << (int) Math.ceil(Math.log(size) / Math.log(2))) + 1;
+
             if (randomCheck.isSelected()) {
                 ds = new DiamondSquare(size,
-                        Integer.parseInt(seedText.getText())
-                );
+                        Integer.parseInt(seedText.getText()));
             } else {
                 ds = new DiamondSquare(size,
                         Integer.parseInt(seedText.getText()),
                         Double.parseDouble(tlNumber.getText()),
                         Double.parseDouble(trNumber.getText()),
                         Double.parseDouble(blNumber.getText()),
-                        Double.parseDouble(brNumber.getText())
-                );
+                        Double.parseDouble(brNumber.getText()));
             }
             pixels = ds.getNoise();
         }
+
         double threshold = thresholdSlider.getValue();
         boolean gray = (RadioButton) modeGroup.getSelectedToggle() == grayRadio;
         for (int y = 0; y < cHeight; y++) {
@@ -167,7 +179,6 @@ public class MainWindow {
                 }
             }
         }
-
     };
 
     // Save canvas contents to a .png file
@@ -192,6 +203,25 @@ public class MainWindow {
         }
     };
 
+    // Set algorithm-appropriate elements
+    final EventHandler<ActionEvent> algAction = (ActionEvent event) -> {
+        if (algComboBox.getValue().equals(perlinSelection)) {
+            perlinSetup();
+        } else if (algComboBox.getValue().equals(diamondSelection)) {
+            diamondSetup();
+        }
+    };
+    
+    // Mouse coordinates
+    final EventHandler<MouseEvent> coordEvent = (MouseEvent event) -> {
+        coordinates.setText("y: " + (int) (event.getSceneY() - topMenu.getHeight()) + " x: " + (int) event.getSceneX());
+    };
+
+    
+    /***********************************
+     * LAYOUT AND COMPONENT PROPERTIES * 
+     ***********************************/
+    
     public MainWindow(Stage stage) {
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -199,30 +229,23 @@ public class MainWindow {
         perlinSetup();
 
         generateButton.setOnAction(generateAction);
-        generateButton.setMinWidth(50);
-        generateButton.setMinHeight(50);
-
-        algComboBox.setValue(perlinSelection);
-        algComboBox.setOnAction(e -> {
-            if (algComboBox.getValue().equals(perlinSelection)) {
-                perlinSetup();
-            } else if (algComboBox.getValue().equals(diamondSelection)) {
-                diamondSetup();
-            }
-        });
-
+        algComboBox.setOnAction(algAction);
+        menuFileSaveMap.setOnAction(exportAction);
         randomCheck.setOnAction(t -> {
             toggleDiamondValues();
         });
 
-        canvas.setOnMouseMoved((MouseEvent event) -> {
-            coordinates.setText("y: " + (int) (event.getSceneY() - topMenu.getHeight()) + " x: " + (int) event.getSceneX());
-        });
+        canvas.setOnMouseMoved(coordEvent);
+
+        algComboBox.setValue(perlinSelection);
 
         grayRadio.setToggleGroup(modeGroup);
         terrainRadio.setToggleGroup(modeGroup);
         terrainRadio.setSelected(true);
-
+        
+        generateButton.setMinWidth(50);
+        generateButton.setMinHeight(50);
+        
         topNumberBox.setSpacing(5);
         botNumberBox.setSpacing(5);
         seedBox.setSpacing(10);
@@ -238,13 +261,12 @@ public class MainWindow {
 
         bottomBar.setAlignment(Pos.CENTER_LEFT);
 
-        menuFileSaveMap.setOnAction(exportAction);
         menuFile.getItems().addAll(menuFileSaveMap);
         menuBar.getMenus().addAll(menuFile);
 
-        layout.setTop(topMenu);
-        layout.setCenter(canvas);
-        layout.setBottom(bottomBar);
+        root.setTop(topMenu);
+        root.setCenter(canvas);
+        root.setBottom(bottomBar);
     }
 
     private void perlinSetup() {
