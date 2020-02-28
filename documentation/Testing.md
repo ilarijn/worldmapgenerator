@@ -6,7 +6,7 @@ Run tests with `./gradlew test` for feedback.
 #### Noise functions
 Tests for the Perlin noise and diamond-square classes consist of confirming that the produced arrays only contain values within the accepted range of [-1.0, 1.0].
 
-Beyond this there is not that much to test with unit tests in my opinions, since functionality is confirmed by looking at a generated map. More tests would be needed if there were specific requirements for generated maps such as "must have at least one flat area of at least size 50x50".
+Beyond this it seems to me that there is not much to test with unit tests, since functionality is confirmed by looking at a generated map. More tests would be needed if there were specific requirements for generated maps such as "must have at least one flat area of at least size 50x50".
 
 #### Rivers 
 Graph integrity is tested by verifying that neighbors and node numbers are correctly formed on the basis of array positions. 

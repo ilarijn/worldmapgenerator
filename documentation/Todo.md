@@ -5,15 +5,13 @@
 * [x] Random
 * [x] Math functions
 * [x] Implementation doc
-* [x] Better test coverage
-* [ ] Test doc
+* [x] Test coverage
+* [x] Test doc
 * [ ] Javadoc
 
 #### Week 7 ->
-* [ ] Test doc
-* [ ] Javadoc
 * [ ] Instructions
-* [ ] Better test coverage
-* [ ] Clean UI code
+* [ ] Time complexity tests
+* [ ] Javadoc
+* [ ] Improve rivers
 * [ ] Rivers for DS
-* [ ] Better rivers?
