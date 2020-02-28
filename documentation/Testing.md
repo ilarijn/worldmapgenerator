@@ -39,4 +39,4 @@ Across 100 iterations of finding all shortest paths in a graph generated from an
 | NodePQ        | 2.33s |
 | PriorityQueue | 1.92s |
 
-Our heap structure performs around 20% slower than the standard implementation, which is still fine for this purpose.
+Our heap structure performs around 20% slower than the standard implementation, which is still fine for the purposes of this project.

@@ -25,3 +25,5 @@ For test and checkstyle reports, run `./gradlew build` and go to `/build/reports
 [Week 4](/documentation/Week4.md)
 
 [Week 5](/documentation/Week5.md)
+
+[Week 6](/documentation/Week6.md)

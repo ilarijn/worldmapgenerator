@@ -7,7 +7,6 @@
 * [x] Implementation doc
 * [x] Test coverage
 * [x] Test doc
-* [ ] Javadoc
 
 #### Week 7 ->
 * [ ] Instructions
