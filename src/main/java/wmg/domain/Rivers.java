@@ -26,7 +26,7 @@ public class Rivers {
     // Run graph setup and Dijkstra's algorithm.
     // Adjust values in the heightmap according to the returned path[].
     public void apply(int srcY, int srcX, int destY, int destX, double riverVal) {
-        
+
         int rowWidth = heightMap[0].length;
         int src = srcY * rowWidth + srcX;
         int dest = destY * rowWidth + destX;
@@ -37,7 +37,7 @@ public class Rivers {
         Node node = graph[dest];
         int prevY = node.getY();
         int prevX = node.getX();
-        
+
         dest = path[dest];
 
         while (dest != src) {
@@ -59,7 +59,7 @@ public class Rivers {
                 }
                 heightMap[y][x] = riverVal;
             }
-            
+
             prevY = node.getY();
             prevX = node.getX();
             dest = path[dest];
@@ -86,20 +86,20 @@ public class Rivers {
         while (!pq.isEmpty()) {
             Node node = pq.poll();
             int currentIndex = node.getId();
-            
+
             if (currentIndex == dest && !all) {
                 break;
             }
             if (included[currentIndex]) {
                 continue;
             }
-            
+
             included[currentIndex] = true;
-            
+
             for (int neighbor : neighbors[currentIndex].getSet()) {
                 double currentDist = distances[neighbor];
                 double proposal = distances[currentIndex] + graph[neighbor].getVal();
-                
+
                 if (proposal < currentDist) {
                     distances[neighbor] = proposal;
                     path[neighbor] = currentIndex;
@@ -107,7 +107,7 @@ public class Rivers {
                 }
             }
         }
-        
+
         return distances;
     }
 
@@ -254,4 +254,13 @@ public class Rivers {
     public int[] getPath() {
         return path;
     }
+
+    public Node[] getGraph() {
+        return graph;
+    }
+
+    public double getINF() {
+        return INF;
+    }
+
 }

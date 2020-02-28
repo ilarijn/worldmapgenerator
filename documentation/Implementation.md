@@ -22,7 +22,7 @@ We typically add together and divide by maximum value several iterations of nois
 Perlin noise has a time complexity of O(2^n) where n equals number of dimensions, with significant constant factors due to the application of math functions and several layers of noise. For the purposes of this project, the time complexity should be O(n) where n is the number of pixels in the map.
 
 ### Diamond-square algorithm
-The diamond-square algorithm works by first assigning values to the four corner points of a 2D array of size 2^n+1. After this, we alternately compute the midpoints of each "square" and "diamond" formed in the grid by existing points. Each midpoint value is the average of its four corner points plus a random value. The below image illustrates each step of the algorithm, from the initial assignment of corner values followed by the diamond and square steps:
+The diamond-square algorithm works by first assigning values to the four corner points of a square 2D array with both width and height of size 2^n+1. After this, we alternately compute the midpoints of each "diamond" and "square" formed in the grid by existing points. Each midpoint value is the average of its four corner points plus a random value. The below image illustrates each step of the algorithm, from the initial assignment of corner values followed by the diamond and square steps:
 
 ![Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Diamond_Square.svg/640px-Diamond_Square.svg.png "Christopher Ewin / CC BY-SA 4.0")
 

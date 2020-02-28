@@ -5,7 +5,22 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class FuncTest {
-
+    
+    @Test
+    public void absTest() {
+        assertTrue(Func.abs(-1.0) == 1);
+        assertTrue(Func.abs(1.0) == 1);
+    }
+    
+    @Test
+    public void ceilTest() {
+        double a = 3.43;
+        double b = 3.00;
+        
+        assertTrue(Func.ceil(a) == 4);
+        assertTrue(Func.ceil(b) == 3);
+    }
+    
     @Test
     public void randomVectorsAreValid() {
         Random r = new Random(123);
@@ -16,14 +31,5 @@ public class FuncTest {
             v = Func.getVector(r.nextDouble());
         }
     }
-
-    @Test
-    public void ceilTest() {
-        double a = 3.43;
-        double b = 3.00;
-
-        assertTrue(Func.ceil(a) == 4);
-        assertTrue(Func.ceil(b) == 3);
-    }
-
+    
 }
