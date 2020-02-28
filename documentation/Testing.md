@@ -1,6 +1,8 @@
 ## Testing
 Run tests with `./gradlew test` for feedback.
 
+You can run the priority queue performance test *n* times with `./gradlew test -Ddijkstra=n`
+
 ### Algorithms
 
 #### Noise functions
@@ -18,21 +20,21 @@ The application of rivers is tested by applying one to a hardcoded heightmap. Th
 ### Data structures and utility functions
 
 #### NodePQ
-Basic operations are tested. Poll functionality is tested by inserting nodes to the queue and confirming that the polling order is correct. 
+Poll functionality is tested by inserting nodes to the queue and confirming that the polling order is correct. 
 
 #### IntegerSet
-The correctness of basic operations is tested. You shouldn't be able to add duplicate elements to a set, set size should be correctly managed.
+Basic operations are tested: you shouldn't be able to add duplicate elements to a set and set size should be correctly managed.
 
 #### Random
 100 000 numbers are generated and confirmed to be within the range of [0, 1.0[.
 
 #### Math
-Math functions are tested by comparing return values to expected results where not redundant.
+Math functions are tested by comparing return values to expected results where this is not redundant.
 
 ### Performance testing
 
 #### NodePQ and PriorityQueue in Dijkstra's algorithm
-Across 100 iterations of finding all shortest paths in a graph generated from an array of size [1000][1000], the average times of NodePQ and PriorityQueue were:
+Across 100 iterations of finding all shortest paths in graphs generated from random heightmaps of size [1000][1000], the average times of NodePQ and PriorityQueue were:
 
 |               |       |
 |---------------|-------|

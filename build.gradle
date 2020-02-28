@@ -44,6 +44,7 @@ jacocoTestReport {
 }
 
 test {
+    systemProperty 'dijkstra', System.getProperty('dijkstra')
     testLogging {
         showStandardStreams = true
     }

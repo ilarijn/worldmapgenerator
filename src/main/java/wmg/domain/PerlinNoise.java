@@ -1,7 +1,7 @@
 package wmg.domain;
 
-import wmg.util.Random;
 import wmg.util.Func;
+import wmg.util.Random;
 import wmg.util.Vector2;
 
 /**
@@ -29,28 +29,34 @@ public class PerlinNoise {
     // Add together n iterations of amplitude-adjusted noise where n is number of octaves.
     public double[][] getOctavedNoise() {
         double[][] res = new double[height][width];
+        
         for (int octave = 0; octave < octaves; octave++) {
             int octaveScale = (int) (scale * Func.pow(0.5, octave));
             double octaveAmp = Func.pow(amplitude, octave);
+            
             int temp = scale;
             scale = octaveScale;
             double[][] noise = getNoise();
             scale = temp;
+            
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
                     res[y][x] += noise[y][x] * octaveAmp;
                 }
             }
         }
+        
         double maxValue = 0;
         for (int octave = 0; octave < octaves; octave++) {
             maxValue += Func.pow(amplitude, octave);
         }
+        
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 res[y][x] = res[y][x] / maxValue;
             }
         }
+        
         return res;
     }
 
@@ -59,18 +65,20 @@ public class PerlinNoise {
         if (scale == 0) {
             scale = 1;
         }
+        
         gridHeight = Func.ceil(height / scale) + 1;
         gridWidth = Func.ceil(width / scale) + 1;
         grid = new Vector2[gridHeight][gridWidth];
 
         generateGradients();
 
-        double values[][] = new double[height][width];
+        double[][] values = new double[height][width];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 values[y][x] = getValue(y, x);
             }
         }
+        
         return values;
     }
 

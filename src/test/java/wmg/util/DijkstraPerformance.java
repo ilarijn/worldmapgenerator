@@ -12,30 +12,34 @@ import wmg.domain.Rivers;
 
 public class DijkstraPerformance {
 
+    static int iterations;
+
     Rivers r;
 
     static double[][] grid;
     static Random random;
     static int n;
     static int dest;
+    static int seed;
 
     static double distPQ;
     static double distNPQ;
 
     @BeforeClass
     public static void setup() {
-        n = 1000;
-        grid = new double[n][n];
-        random = new Random(123);
-        for (int y = 0; y < n; y++) {
-            for (int x = 0; x < n; x++) {
-                grid[y][x] = random.nextDouble();
-            }
+
+        try {
+            iterations = Integer.parseInt(System.getProperty("dijkstra"));
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            iterations = 1;
         }
+
+        n = 1000;
+
         dest = (n - 1) * (n - 1);
 
         File dir = new File("./log");
-
         if (!dir.exists()) {
             dir.mkdir();
         }
@@ -46,27 +50,32 @@ public class DijkstraPerformance {
 
         File f = new File("nodepqlog.txt");
 
-        r = new Rivers(grid);
-        r.setup();
+        for (int i = 0; i < iterations; i++) {
 
-        long start = System.nanoTime();
-        double distances[] = r.dijkstra(0, dest, true);
-        long end = System.nanoTime();
+            setupGrid();
 
-        double res = ((end - start) / 1e9);
+            r = new Rivers(grid);
+            r.setup();
 
-        try {
-            FileWriter fw = new FileWriter("./log/" + f, true);
-            fw.append(Double.toString(res));
-            fw.append("\n");
-            fw.close();
-        } catch (IOException e) {
-            System.out.println(e);
+            long start = System.nanoTime();
+            double distances[] = r.dijkstra(0, dest, true);
+            long end = System.nanoTime();
+
+            double res = ((end - start) / 1e9);
+
+            try {
+                FileWriter fw = new FileWriter("./log/" + f, true);
+                fw.append(Double.toString(res));
+                fw.append("\n");
+                fw.close();
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+
+            distNPQ = distances[dest];
+
+            System.out.println("All shortest paths in [" + n + "][" + n + "] using NodePQ: " + res + "s");
         }
-
-        distNPQ = distances[dest];
-
-        System.out.println("All shortest paths in [" + n + "][" + n + "] using NodePQ: " + res + "s");
     }
 
     @Test
@@ -74,32 +83,48 @@ public class DijkstraPerformance {
 
         File f = new File("pqlog.txt");
 
-        r = new Rivers(grid);
-        r.setup();
+        for (int i = 0; i < iterations; i++) {
 
-        long start = System.nanoTime();
-        double distances[] = dijkstraPQ(0, dest, true, r.getGraph());
-        long end = System.nanoTime();
+            setupGrid();
 
-        double res = ((end - start) / 1e9);
+            r = new Rivers(grid);
+            r.setup();
 
-        try {
-            FileWriter fw = new FileWriter("./log/" + f, true);
-            fw.append(Double.toString(res));
-            fw.append("\n");
-            fw.close();
-        } catch (IOException e) {
-            System.out.println(e);
+            long start = System.nanoTime();
+            double distances[] = dijkstraPQ(0, dest, true, r.getGraph());
+            long end = System.nanoTime();
+
+            double res = ((end - start) / 1e9);
+
+            try {
+                FileWriter fw = new FileWriter("./log/" + f, true);
+                fw.append(Double.toString(res));
+                fw.append("\n");
+                fw.close();
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+
+            distPQ = distances[dest];
+
+            System.out.println("All shortest paths in [" + n + "][" + n + "] using PriorityQueue<Node>: " + res + "s");
         }
-
-        distPQ = distances[dest];
-
-        System.out.println("All shortest paths in [" + n + "][" + n + "] using PriorityQueue<Node>: " + res + "s");
     }
 
     @AfterClass
     public static void equalResults() {
         assertTrue(distPQ == distNPQ);
+    }
+
+    public static void setupGrid() {
+        seed = 123;
+        grid = new double[n][n];
+        random = new Random(seed);
+        for (int y = 0; y < n; y++) {
+            for (int x = 0; x < n; x++) {
+                grid[y][x] = random.nextDouble();
+            }
+        }
     }
 
     public double[] dijkstraPQ(int src, int dest, boolean all, Node[] graph) {
