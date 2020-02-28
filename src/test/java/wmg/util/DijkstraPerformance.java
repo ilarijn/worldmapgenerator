@@ -46,31 +46,27 @@ public class DijkstraPerformance {
 
         File f = new File("nodepqlog.txt");
 
-        for (int i = 0; i < 20; i++) {
+        r = new Rivers(grid);
+        r.setup();
 
-            r = new Rivers(grid);
-            r.setup();
+        long start = System.nanoTime();
+        double distances[] = r.dijkstra(0, dest, true);
+        long end = System.nanoTime();
 
-            long start = System.nanoTime();
-            double distances[] = r.dijkstra(0, dest, true);
-            long end = System.nanoTime();
+        double res = ((end - start) / 1e9);
 
-            double res = ((end - start) / 1e9);
-
-            try {
-                FileWriter fw = new FileWriter("./log/" + f, true);
-                fw.append(Double.toString(res));
-                fw.append("\n");
-                fw.close();
-            } catch (IOException e) {
-                System.out.println(e);
-            }
-
-            distNPQ = distances[dest];
-
-            System.out.println("All shortest paths in [" + n + "][" + n + "] using NodePQ: " + res + "s");
-
+        try {
+            FileWriter fw = new FileWriter("./log/" + f, true);
+            fw.append(Double.toString(res));
+            fw.append("\n");
+            fw.close();
+        } catch (IOException e) {
+            System.out.println(e);
         }
+
+        distNPQ = distances[dest];
+
+        System.out.println("All shortest paths in [" + n + "][" + n + "] using NodePQ: " + res + "s");
     }
 
     @Test
@@ -78,31 +74,27 @@ public class DijkstraPerformance {
 
         File f = new File("pqlog.txt");
 
-        for (int i = 0; i < 20; i++) {
+        r = new Rivers(grid);
+        r.setup();
 
-            r = new Rivers(grid);
-            r.setup();
+        long start = System.nanoTime();
+        double distances[] = dijkstraPQ(0, dest, true, r.getGraph());
+        long end = System.nanoTime();
 
-            long start = System.nanoTime();
-            double distances[] = dijkstraPQ(0, dest, true, r.getGraph());
-            long end = System.nanoTime();
+        double res = ((end - start) / 1e9);
 
-            double res = ((end - start) / 1e9);
-
-            try {
-                FileWriter fw = new FileWriter("./log/" + f, true);
-                fw.append(Double.toString(res));
-                fw.append("\n");
-                fw.close();
-            } catch (IOException e) {
-                System.out.println(e);
-            }
-
-            distPQ = distances[dest];
-
-            System.out.println("All shortest paths in [" + n + "][" + n + "] using PriorityQueue<Node>: " + res + "s");
-
+        try {
+            FileWriter fw = new FileWriter("./log/" + f, true);
+            fw.append(Double.toString(res));
+            fw.append("\n");
+            fw.close();
+        } catch (IOException e) {
+            System.out.println(e);
         }
+
+        distPQ = distances[dest];
+
+        System.out.println("All shortest paths in [" + n + "][" + n + "] using PriorityQueue<Node>: " + res + "s");
     }
 
     @AfterClass
