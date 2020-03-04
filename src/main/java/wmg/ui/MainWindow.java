@@ -38,6 +38,7 @@ import javafx.stage.Stage;
 import wmg.domain.DiamondSquare;
 import wmg.domain.PerlinNoise;
 import wmg.domain.Rivers;
+import wmg.util.Random;
 
 public class MainWindow {
 
@@ -45,9 +46,9 @@ public class MainWindow {
     int height = 580;
     
 
-    /***********************************
-     * UI COMPONENTS                   * 
-     ***********************************/
+    /************************************
+     * UI COMPONENTS                    * 
+     ************************************/
     
     final BorderPane root = new BorderPane();
     final Scene scene = new Scene(root, this.width - 1, this.height);
@@ -86,16 +87,16 @@ public class MainWindow {
     final Slider cellSlider = new Slider();
     final Slider octaveSlider = new Slider();
     final Slider ampSlider = new Slider();
-    final Slider thresholdSlider = new Slider();
+    final Slider waterSlider = new Slider();
+    final Slider riverSlider = new Slider();
     final VBox sliderBox1 = new VBox();
     final VBox sliderBox2 = new VBox();
+    final VBox sliderBox3 = new VBox(makeIntSliderBox(riverSlider, "Rivers: ", 0, 5, 0));
 
     final Label seedLabel = new Label("Map seed:");
     final NumberTextField seedText = new NumberTextField("3", true);
-    final CheckBox fadeCheck = new CheckBox("Fade");
-    final HBox checkBox = new HBox(fadeCheck);
     final VBox seedTextBox = new VBox(seedLabel, seedText);
-    final VBox seedBox = new VBox();
+    final VBox seedBox = new VBox(seedTextBox, sliderBox3);
 
     final Label cornerLabel = new Label("Corner values (in range [-1.0, 1.0]):");
     final CheckBox randomCheck = new CheckBox("Random");
@@ -110,27 +111,25 @@ public class MainWindow {
     final HBox bottomBar = new HBox();
     
 
-    /***********************************
-     * EVENT HANDLERS                  * 
-     ***********************************/
+    /************************************
+     * EVENT HANDLERS                   * 
+     ************************************/
     
     // Generate a map or grayscale noise according to given parameters
     final EventHandler<ActionEvent> generateAction = (ActionEvent event) -> {
         int cHeight = (int) canvas.getHeight();
         int cWidth = (int) canvas.getWidth();
         double[][] pixels = new double[0][0];
+        int seed = Integer.parseInt(seedText.getText());
 
         if (algComboBox.getValue().equals(perlinSelection)) {
             PerlinNoise pn = new PerlinNoise(cHeight, cWidth,
                     (int) cellSlider.getValue(),
                     (int) octaveSlider.getValue(),
                     ampSlider.getValue(),
-                    fadeCheck.isSelected(),
-                    Integer.parseInt(seedText.getText()));
+                    false,
+                    seed);
             pixels = pn.getOctavedNoise();
-            Rivers r = new Rivers(pixels);
-            r.apply(280, 100, 70, 300, -0.2);
-            r.apply(150, 700, 374, 604, -0.2);
 
         } else if (algComboBox.getValue().equals(diamondSelection)) {
             DiamondSquare ds;
@@ -154,16 +153,38 @@ public class MainWindow {
             pixels = ds.getNoise();
         }
 
-        double threshold = thresholdSlider.getValue();
+        Rivers r = new Rivers(pixels);
+        Random rand = new Random(seed);
+        int amount = (int) riverSlider.getValue();
+
+        for (int i = 0; i < amount; i++) {
+            int srcY = (int) (rand.nextDouble() * cHeight - 50);
+            int srcX = (int) (rand.nextDouble() * cWidth - 50);
+
+            int destY = (int) (rand.nextDouble() * cHeight + 50);
+            int destX = (int) (rand.nextDouble() * cWidth + 50);
+
+            srcY = srcY < cHeight ? 0 : srcY;
+            srcX = srcX < cWidth ? 0 : srcX;
+
+            destY = destY > cHeight ? cHeight - 1 : destY;
+            destX = destX > cWidth ? cWidth - 1 : destX;
+
+            r.apply(srcY, srcX, destY, destX, waterSlider.getValue());
+        }
+
+        double threshold = waterSlider.getValue();
         boolean gray = (RadioButton) modeGroup.getSelectedToggle() == grayRadio;
+
         for (int y = 0; y < cHeight; y++) {
             for (int x = 0; x < cWidth; x++) {
+
                 if (gray) {
                     int value = (int) (128 + 128 * pixels[y][x]);
                     pw.setColor(x, y, Color.rgb(value, value, value));
                 } else {
                     double value = pixels[y][x];
-                    if (value < threshold) {
+                    if (value <= threshold) {
                         pw.setColor(x, y, Color.BLUE);
                     } else if (value < threshold + 0.01) {
                         pw.setColor(x, y, Color.KHAKI);
@@ -211,15 +232,15 @@ public class MainWindow {
             diamondSetup();
         }
     };
-    
+
     // Mouse coordinates
     final EventHandler<MouseEvent> coordEvent = (MouseEvent event) -> {
         coordinates.setText("y: " + (int) (event.getSceneY() - topMenu.getHeight()) + " x: " + (int) event.getSceneX());
     };
-
     
+
     /***********************************
-     * LAYOUT AND COMPONENT PROPERTIES * 
+     * LAYOUT AND COMPONENT PROPERTIES *
      ***********************************/
     
     public MainWindow(Stage stage) {
@@ -242,17 +263,17 @@ public class MainWindow {
         grayRadio.setToggleGroup(modeGroup);
         terrainRadio.setToggleGroup(modeGroup);
         terrainRadio.setSelected(true);
-        
+
         generateButton.setMinWidth(50);
         generateButton.setMinHeight(50);
-        
+
         topNumberBox.setSpacing(5);
         botNumberBox.setSpacing(5);
-        seedBox.setSpacing(10);
+        seedBox.setSpacing(0);
         radioBox.setSpacing(5);
         modeBox.setSpacing(5);
 
-        seedBox.setPadding(new Insets(10));
+        seedBox.setPadding(new Insets(10, 0, 0, 0));
         bottomBar.setPadding(new Insets(10));
         sliderBox1.setPadding(new Insets(10));
         sliderBox2.setPadding(new Insets(10));
@@ -282,11 +303,8 @@ public class MainWindow {
                 makeIntSliderBox(octaveSlider, "Octaves: ", 1, 8, 5));
 
         sliderBox2.getChildren().clear();
-        sliderBox2.getChildren().addAll(makeDoubleSliderBox(thresholdSlider, "Water level: ", -0.4, 0.5, -0.1, 0.01),
+        sliderBox2.getChildren().addAll(makeDoubleSliderBox(waterSlider, "Water level: ", -0.4, 0.5, -0.1, 0.01),
                 makeDoubleSliderBox(ampSlider, "Amplitude: ", 0.1, 2, 0.6, 0.1));
-
-        seedBox.getChildren().clear();
-        seedBox.getChildren().addAll(seedTextBox, checkBox);
 
         bottomBar.getChildren().clear();
         bottomBar.getChildren().addAll(generateButton, sliderBox1, sliderBox2, seedBox, modeBox);
@@ -294,14 +312,10 @@ public class MainWindow {
 
     private void diamondSetup() {
         sliderBox1.getChildren().clear();
-        sliderBox1.getChildren().addAll(
-                makeDoubleSliderBox(thresholdSlider, "Water level: ", -0.4, 0.5, 0.0, 0.01));
+        sliderBox1.getChildren().addAll(makeDoubleSliderBox(waterSlider, "Water level: ", -0.4, 0.5, 0.0, 0.01));
 
         randomCheck.setSelected(true);
         toggleDiamondValues();
-
-        seedBox.getChildren().clear();
-        seedBox.getChildren().addAll(seedTextBox);
 
         bottomBar.getChildren().clear();
         bottomBar.getChildren().addAll(generateButton, cornerBox, sliderBox1, seedBox, modeBox);

@@ -33,8 +33,8 @@ Math functions are tested by comparing return values to expected results where t
 
 ### Performance testing
 
-#### NodePQ and PriorityQueue in Dijkstra's algorithm
-Across 100 iterations of finding all shortest paths in graphs generated from random heightmaps of size [1000][1000], the average times of NodePQ and PriorityQueue were:
+#### NodePQ vs PriorityQueue in Dijkstra's algorithm
+Across 100 iterations of finding all shortest paths in graphs generated from random heightmaps of size [1000][1000], the average running times of Dijkstra's algorithm using either NodePQ or PriorityQueue were:
 
 |               |       |
 |---------------|-------|

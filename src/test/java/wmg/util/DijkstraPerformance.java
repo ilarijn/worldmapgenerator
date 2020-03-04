@@ -24,6 +24,7 @@ public class DijkstraPerformance {
 
     static double distPQ;
     static double distNPQ;
+    static double distNSquare;
 
     @BeforeClass
     public static void setup() {
@@ -31,11 +32,10 @@ public class DijkstraPerformance {
         try {
             iterations = Integer.parseInt(System.getProperty("dijkstra"));
         } catch (NumberFormatException e) {
-            System.out.println(e);
             iterations = 1;
         }
 
-        n = 1000;
+        n = 400;
 
         dest = (n - 1) * (n - 1);
 
@@ -111,9 +111,35 @@ public class DijkstraPerformance {
         }
     }
 
+    @Test
+    public void dijkstraNSquare() {
+
+        for (int i = 0; i < iterations; i++) {
+
+            setupGrid();
+
+            r = new Rivers(grid);
+            r.setup();
+
+            long start = System.nanoTime();
+            double distances[] = dijkstraNSquare(0);
+            long end = System.nanoTime();
+
+            double res = ((end - start) / 1e9);
+
+            distNSquare = distances[dest];
+
+            System.out.println("All shortest paths in [" + n + "][" + n + "] using n^2 comparison: " + res + "s");
+        }
+    }
+
     @AfterClass
     public static void equalResults() {
+        System.out.println(distNPQ);
+        System.out.println(distPQ);
+        System.out.println(distNSquare);
         assertTrue(distPQ == distNPQ);
+        assertTrue(distPQ == distNSquare);
     }
 
     public static void setupGrid() {
@@ -171,4 +197,45 @@ public class DijkstraPerformance {
 
         return distances;
     }
+
+    public double[] dijkstraNSquare(int src) {
+
+        IntegerSet[] neighbors = r.getNeighbors();
+        Node[] graph = r.getGraph();
+
+        double[] distance = new double[n * n];
+        boolean[] included = new boolean[n * n];
+
+        for (int i = 0; i < n * n; i++) {
+            distance[i] = Double.MAX_VALUE;
+            included[i] = false;
+        }
+
+        distance[src] = 0;
+
+        for (int i = 0; i < n * n; i++) {
+            double min = Double.MAX_VALUE;
+            int min_index = -1;
+
+            for (int v = 0; v < n * n; v++) {
+                if (included[v] == false && distance[v] <= min) {
+                    min = distance[v];
+                    min_index = v;
+                }
+            }
+
+            included[min_index] = true;
+
+            for (int neighbor : neighbors[min_index].getSet()) {
+                if (!included[neighbor]
+                        && distance[min_index] != Double.MAX_VALUE
+                        && distance[min_index] + graph[neighbor].getVal() < distance[neighbor]) {
+                    distance[neighbor] = distance[min_index] + graph[neighbor].getVal();
+                }
+            }
+        }
+
+        return distance;
+    }
+
 }

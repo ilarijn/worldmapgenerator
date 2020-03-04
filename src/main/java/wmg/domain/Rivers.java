@@ -48,14 +48,16 @@ public class Rivers {
             if (y < heightMap.length - 1
                     && x < rowWidth - 1
                     && y > 0 && x > 0) {
-                if (prevY == y && prevX != x) {
-                    heightMap[y + 1][x] = riverVal;
-                    heightMap[y - 1][x] = riverVal;
-                } else {
-                    heightMap[y][x + 1] = riverVal;
-                    heightMap[y][x - 1] = riverVal;
-                    heightMap[y + 1][x] = riverVal;
-                    heightMap[y - 1][x] = riverVal;
+                if (heightMap[y][x] == riverVal) {
+                    if (prevY == y && prevX != x) {
+                        heightMap[y + 1][x] = riverVal;
+                        heightMap[y - 1][x] = riverVal;
+                    } else {
+                        heightMap[y][x + 1] = riverVal;
+                        heightMap[y][x - 1] = riverVal;
+                        heightMap[y + 1][x] = riverVal;
+                        heightMap[y - 1][x] = riverVal;
+                    }
                 }
                 heightMap[y][x] = riverVal;
             }
@@ -128,7 +130,6 @@ public class Rivers {
         // First row.
         for (int x = 1; x < rowLength - 1; x++) {
             int y = 0;
-
             int current = x;
             int east = current + 1;
             int west = current - 1;
@@ -187,9 +188,7 @@ public class Rivers {
         // Inner cells.
         for (int y = 1; y < heightMap.length - 1; y++) {
             for (int x = 1; x < heightMap[y].length - 1; x++) {
-
                 int current = y * heightMap[y].length + x;
-
                 int northWest = current - heightMap[y].length - 1;
                 int north = current - heightMap[y].length;
                 int northEast = current - heightMap[y].length + 1;
