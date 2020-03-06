@@ -4,6 +4,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.8'
     id 'jacoco'
     id 'checkstyle'
+    id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
 
 repositories {
@@ -16,7 +17,13 @@ dependencies {
 }
 
 application {
-    mainClassName = 'wmg.App'
+    mainClassName = 'wmg.Main'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'wmg.Main'
+    }
 }
 
 javafx {
@@ -44,7 +51,9 @@ jacocoTestReport {
 }
 
 test {
-    systemProperty 'dijkstra', System.getProperty('dijkstra')
+    systemProperty 'testsize', System.getProperty('testsize')
+    systemProperty 'testiter', System.getProperty('testiter')
+    systemProperty 'nsquare', System.getProperty('nsquare')
     testLogging {
         showStandardStreams = true
     }

@@ -8,11 +8,19 @@ public class IntegerSet {
     int[] set;
     int n;
 
+    /**
+     * Constructor.
+     */
     public IntegerSet() {
         n = 0;
+        // Set the size of the set as eight (max number of node neighbors in the river generation graph).
         set = new int[8];
     }
 
+    /**
+     * Add argument to set if not already there. 
+     * @param x 
+     */
     public void add(int x) {
         if (!this.contains(x)) {
             if (n >= set.length) expand();
@@ -20,6 +28,10 @@ public class IntegerSet {
         }
     }
 
+    /**
+     * Add all arguments to set if not already there.
+     * @param args 
+     */
     public void addAll(int... args) {
         for (int i : args) add(i);        
     }
@@ -30,15 +42,16 @@ public class IntegerSet {
         set = clone;
     }
 
+    /**
+     * 
+     * @param x
+     * @return True if x is in set.
+     */
     public boolean contains(int x) {
         for (int i = 0; i < n; i++) {
             if (set[i] == x) return true;            
         }
         return false;
-    }
-
-    public int get(int i) {
-        return set[i];
     }
 
     public int size() {

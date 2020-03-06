@@ -16,56 +16,68 @@ public class PerlinNoise {
     boolean fade;
     Random random;
 
-    public PerlinNoise(int h, int w, int s, int o, double a, boolean f, int seed) {
+    /**
+     * Constructor.
+     * @param h Heightmap height.
+     * @param w Heightmap width.
+     * @param s Noise scale.
+     * @param o Number of octaves of noise.
+     * @param a Factor affecting range of resultant values (greater value means
+     * more variance).
+     * @param seed Random seed.
+     */
+    public PerlinNoise(int h, int w, int s, int o, double a, int seed) {
         height = h;
         width = w;
         scale = s;
         octaves = o;
         amplitude = a;
-        fade = f;
         random = new Random(seed);
     }
 
-    // Add together n iterations of amplitude-adjusted noise where n is number of octaves.
+    /**
+     * Add together n iterations of noise where n is number of octaves.
+     * @return Finished heightmap.
+     */
     public double[][] getOctavedNoise() {
         double[][] res = new double[height][width];
-        
+
         for (int octave = 0; octave < octaves; octave++) {
             int octaveScale = (int) (scale * Func.pow(0.5, octave));
             double octaveAmp = Func.pow(amplitude, octave);
-            
+
             int temp = scale;
             scale = octaveScale;
             double[][] noise = getNoise();
             scale = temp;
-            
+
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
                     res[y][x] += noise[y][x] * octaveAmp;
                 }
             }
         }
-        
+
         double maxValue = 0;
         for (int octave = 0; octave < octaves; octave++) {
             maxValue += Func.pow(amplitude, octave);
         }
-        
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 res[y][x] = res[y][x] / maxValue;
             }
         }
-        
+
         return res;
     }
 
-    // Returns array of values in range [-1.0, 1.0].
-    public double[][] getNoise() {
+    // Single iteration of noise.
+    private double[][] getNoise() {
         if (scale == 0) {
             scale = 1;
         }
-        
+
         gridHeight = Func.ceil(height / scale) + 1;
         gridWidth = Func.ceil(width / scale) + 1;
         grid = new Vector2[gridHeight][gridWidth];
@@ -78,12 +90,12 @@ public class PerlinNoise {
                 values[y][x] = getValue(y, x);
             }
         }
-        
+
         return values;
     }
 
     // Generate random "gradient", i.e. vector, for each grid point. 
-    public void generateGradients() {
+    private void generateGradients() {
         for (int y = 0; y < gridHeight; y++) {
             for (int x = 0; x < gridWidth; x++) {
                 double val = random.nextDouble();
@@ -93,7 +105,7 @@ public class PerlinNoise {
     }
 
     // Get noise value in range [-1, 1]  at coordinate (x, y).
-    public double getValue(int y, int x) {
+    private double getValue(int y, int x) {
 
         // Figure out cell of coordinate, relative to current scale.
         int cellY = y / scale;
@@ -102,12 +114,6 @@ public class PerlinNoise {
         // Coordinate inside cell.
         double relativeY = (y - cellY * scale * 1.0) / scale;
         double relativeX = (x - cellX * scale * 1.0) / scale;
-
-        // Apply fade.
-        if (fade) {
-            relativeX = Func.fade(relativeX);
-            relativeY = Func.fade(relativeY);
-        }
 
         // Get gradient vectors of each corner node of current cell.
         int rightCorner = cellX + 1 >= grid[0].length ? cellX : cellX + 1;

@@ -1,16 +1,16 @@
 package wmg.util;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.PriorityQueue;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import wmg.domain.Rivers;
 
-public class DijkstraPerformance {
+/**
+ * Performance testing for Dijkstra's algorithm using NodePQ, PriorityQueue and
+ * an n^2 solution.
+ *
+ */
+public class HeapPerformance {
 
     static int iterations;
 
@@ -26,29 +26,36 @@ public class DijkstraPerformance {
     static double distNPQ;
     static double distNSquare;
 
+    static int includeNSquare;
+
     @BeforeClass
     public static void setup() {
 
         try {
-            iterations = Integer.parseInt(System.getProperty("dijkstra"));
+            iterations = Integer.parseInt(System.getProperty("testiter"));
         } catch (NumberFormatException e) {
             iterations = 1;
         }
 
-        n = 400;
+        try {
+            n = Integer.parseInt(System.getProperty("testsize"));
+        } catch (NumberFormatException e) {
+            n = 400;
+        }
+
+        try {
+            includeNSquare = Integer.parseInt(System.getProperty("nsquare"));
+        } catch (NumberFormatException e) {
+            includeNSquare = 0;
+        }
 
         dest = (n - 1) * (n - 1);
-
-        File dir = new File("./log");
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
     }
 
     @Test
     public void dijkstraNodePQ() {
 
-        File f = new File("nodepqlog.txt");
+        double avg = 0;
 
         for (int i = 0; i < iterations; i++) {
 
@@ -62,26 +69,19 @@ public class DijkstraPerformance {
             long end = System.nanoTime();
 
             double res = ((end - start) / 1e9);
-
-            try {
-                FileWriter fw = new FileWriter("./log/" + f, true);
-                fw.append(Double.toString(res));
-                fw.append("\n");
-                fw.close();
-            } catch (IOException e) {
-                System.out.println(e);
-            }
+            avg += res;
 
             distNPQ = distances[dest];
 
             System.out.println("All shortest paths in [" + n + "][" + n + "] using NodePQ: " + res + "s");
         }
+        System.out.println("Average: " + (avg / iterations));
     }
 
     @Test
     public void dijkstraPQ() {
 
-        File f = new File("pqlog.txt");
+        double avg = 0;
 
         for (int i = 0; i < iterations; i++) {
 
@@ -95,54 +95,45 @@ public class DijkstraPerformance {
             long end = System.nanoTime();
 
             double res = ((end - start) / 1e9);
-
-            try {
-                FileWriter fw = new FileWriter("./log/" + f, true);
-                fw.append(Double.toString(res));
-                fw.append("\n");
-                fw.close();
-            } catch (IOException e) {
-                System.out.println(e);
-            }
+            avg += res;
 
             distPQ = distances[dest];
 
             System.out.println("All shortest paths in [" + n + "][" + n + "] using PriorityQueue<Node>: " + res + "s");
         }
+        System.out.println("Average: " + (avg / iterations));
     }
 
     @Test
     public void dijkstraNSquare() {
 
-        for (int i = 0; i < iterations; i++) {
+        if (includeNSquare > 0) {
 
-            setupGrid();
+            double avg = 0;
 
-            r = new Rivers(grid);
-            r.setup();
+            for (int i = 0; i < iterations; i++) {
 
-            long start = System.nanoTime();
-            double distances[] = dijkstraNSquare(0);
-            long end = System.nanoTime();
+                setupGrid();
 
-            double res = ((end - start) / 1e9);
+                r = new Rivers(grid);
+                r.setup();
 
-            distNSquare = distances[dest];
+                long start = System.nanoTime();
+                double distances[] = dijkstraNSquare(0);
+                long end = System.nanoTime();
 
-            System.out.println("All shortest paths in [" + n + "][" + n + "] using n^2 comparison: " + res + "s");
+                double res = ((end - start) / 1e9);
+                avg += res;
+
+                distNSquare = distances[dest];
+
+                System.out.println("All shortest paths in [" + n + "][" + n + "] using n^2 comparison: " + res + "s");
+            }
+            System.out.println("Average: " + (avg / iterations) + "s");
         }
     }
 
-    @AfterClass
-    public static void equalResults() {
-        System.out.println(distNPQ);
-        System.out.println(distPQ);
-        System.out.println(distNSquare);
-        assertTrue(distPQ == distNPQ);
-        assertTrue(distPQ == distNSquare);
-    }
-
-    public static void setupGrid() {
+    private static void setupGrid() {
         seed = 123;
         grid = new double[n][n];
         random = new Random(seed);
@@ -153,6 +144,15 @@ public class DijkstraPerformance {
         }
     }
 
+    /**
+     * Dijkstra's algorithm using PriorityQueue.
+     *
+     * @param src Source node.
+     * @param dest Destination node.
+     * @param all Find all distances if true.
+     * @param graph Graph
+     * @return
+     */
     public double[] dijkstraPQ(int src, int dest, boolean all, Node[] graph) {
 
         PriorityQueue<Node> pq = new PriorityQueue<>();
@@ -198,6 +198,12 @@ public class DijkstraPerformance {
         return distances;
     }
 
+    /**
+     * n^2 version of Dijkstra's algorithm.
+     *
+     * @param src Source node.
+     * @return All distances from source.
+     */
     public double[] dijkstraNSquare(int src) {
 
         IntegerSet[] neighbors = r.getNeighbors();

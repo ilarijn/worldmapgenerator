@@ -3,6 +3,10 @@ package wmg.domain;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+/**
+ * Test to confirm heightmap values are in accepted range.
+ *
+ */
 public class DiamondSquareTest {
 
     @Test

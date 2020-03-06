@@ -42,8 +42,8 @@ import wmg.util.Random;
 
 public class MainWindow {
 
-    int width = 800;
-    int height = 580;
+    int width = 1000;
+    int height = 750;
     
 
     /************************************
@@ -127,7 +127,6 @@ public class MainWindow {
                     (int) cellSlider.getValue(),
                     (int) octaveSlider.getValue(),
                     ampSlider.getValue(),
-                    false,
                     seed);
             pixels = pn.getOctavedNoise();
 

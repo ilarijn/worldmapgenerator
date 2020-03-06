@@ -1,5 +1,9 @@
 package wmg.util;
 
+/**
+ * A point in two-dimensional space.
+ *
+ */
 public class Vector2 {
 
     private double y, x;
@@ -15,11 +19,6 @@ public class Vector2 {
 
     public double getX() {
         return x;
-    }
-
-    @Override
-    public String toString() {
-        return "y: " + y + ", x: " + x;
     }
 
 }

@@ -4,8 +4,8 @@ import wmg.util.Func;
 import wmg.util.Random;
 
 /**
- * Returns a 2D array with values in range [-1.0, 1.0].
- *
+ * Returns a 2D array of noise with values in range [-1.0, 1.0].
+ * The heightmap should be square, with a side length of 2^n-1 for correct results.
  */
 public class DiamondSquare {
 
@@ -13,7 +13,11 @@ public class DiamondSquare {
     int size;
     Random random;
 
-    // Random initial corner values.
+   /**
+    * Constructor for random initial corner values.
+    * @param size Grid side length.
+    * @param seed Random seed.
+    */
     public DiamondSquare(int size, int seed) {
         this.size = size;
         grid = new double[size][size];
@@ -25,7 +29,15 @@ public class DiamondSquare {
         grid[size - 1][size - 1] = random.nextDouble() * 2.0 - 1.0;
     }
 
-    // Fixed initial corner values.
+  /**
+   * 
+   * @param size Grid side length.
+   * @param seed Random seed.
+   * @param tl Top-left corner value.
+   * @param tr Top-right corner value.
+   * @param bl Bottom-left corner value.
+   * @param br Bottom-right corner value.
+   */
     public DiamondSquare(int size, int seed, double tl, double tr, double bl, double br) {
         this.size = size;
         grid = new double[size][size];
@@ -37,6 +49,11 @@ public class DiamondSquare {
         grid[size - 1][size - 1] = br;
     }
 
+    /**
+     * Run diamond-square algorithm.
+     * @return Finished heightmap.
+     */
+    
     public double[][] getNoise() {
         int sideLength = size - 1;
         double randomWeight = 1.0;

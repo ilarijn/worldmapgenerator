@@ -9,11 +9,12 @@ For test and checkstyle reports, run `./gradlew build` and go to `/build/reports
 #### Documentation
 [Project definition](/documentation/Definition.md)
 
+[Instructions](/documentation/Instructions.md)
+
 [Implementation details](/documentation/Implementation.md)
 
-[Testing document](/documentation/Testing.md)
+[Testing details](/documentation/Testing.md)
 
-[Todo](/documentation/Todo.md)
 
 #### Weekly reports
 [Week 1](/documentation/Week1.md)

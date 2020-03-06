@@ -1,7 +1,9 @@
 ## Testing
 Run tests with `./gradlew test` for feedback.
 
-You can run the priority queue performance test *n* times with `./gradlew test -Ddijkstra=n`
+You can run the performance tests *i* times on an array of size [*n*][*n*] with `./gradlew test -Dtestiter=i -Dtestsize=n`
+
+Include `-Dnsquare=1` if you want to also include an O(n^2) version of Dijkstra's algorithm in the tests.
 
 ### Algorithms
 
@@ -42,3 +44,11 @@ Across 100 iterations of finding all shortest paths in graphs generated from ran
 | PriorityQueue | 1.92s |
 
 Our heap structure performs around 20% slower than the standard implementation, which is still fine for the purposes of this project.
+
+#### Final time complexities 
+
+The plot below represents performance tests carried out on the algorithms implemented. The results seem to be in line with the theoretical upper bounds: O(n) for the noise functions and O(e + n log n) for Dijkstra's algorithm. There is an O(n^2) version of Dijkstra's algorithm included for the sake of comparison.
+
+![Time complexity plot](Otime.png)
+
+

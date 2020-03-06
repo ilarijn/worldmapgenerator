@@ -14,6 +14,11 @@ public class Random {
 
     private final long[] mt;
 
+    /**
+     * Constructor.
+     * @param seed Seed number.
+     */
+    
     public Random(long seed) {
         n = 624;
 
@@ -28,7 +33,7 @@ public class Random {
         }
     }
 
-    public long getRandom() {
+    private long getRandom() {
         if (index >= n) {
             twist();
         }
@@ -56,6 +61,10 @@ public class Random {
         index = 0;
     }
 
+    /**
+     * Get next value in the sequence.
+     * @return 
+     */
     public double nextDouble() {
         return (getRandom() >> 11) * (2.0 / 9007199254740992.0);
     }

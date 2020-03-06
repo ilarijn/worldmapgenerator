@@ -1,16 +1,16 @@
 package wmg.util;
 
 /**
- * Min heap priority queue for Node objects.
- * Based on the MaxPQ class in Sedgewick & Wayne: Algorithms 4th ed.
+ * Min heap priority queue for Node objects. Based on the MaxPQ class in
+ * Sedgewick &amp; Wayne: Algorithms 4th ed.
  */
-
 public class NodePQ {
 
     private Node[] pq;
     private int n;
 
     public NodePQ() {
+        // Set size to a number somewhat greater than the approximate amount of pixels in typical heightmap.
         pq = new Node[30_001];
         n = 0;
     }
@@ -20,13 +20,22 @@ public class NodePQ {
     }
 
     public void add(Node node) {
-        if (n == pq.length - 1) resize(pq.length * 2); 
+        if (n == pq.length - 1) {
+            resize(pq.length * 2);
+        }
         pq[++n] = node;
         swim(n);
     }
 
+    /**
+     * Return and remove from queue node with smallest value.
+     *
+     * @return Node with smallest value in queue.
+     */
     public Node poll() {
-        if (isEmpty()) return null;
+        if (isEmpty()) {
+            return null;
+        }
         Node min = pq[1];
         swap(1, n--);
         sink(1);
@@ -74,7 +83,7 @@ public class NodePQ {
             pq = temp;
         }
     }
-   
+
     public int size() {
         return n;
     }

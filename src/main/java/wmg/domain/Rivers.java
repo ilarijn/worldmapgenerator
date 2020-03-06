@@ -5,8 +5,9 @@ import wmg.util.Node;
 import wmg.util.NodePQ;
 
 /**
- * River generation by finding shortest path from source to destination.
- * Heightmap values are weights in the graph.
+ * River generation by finding shortest path (lowest terrain) from source to
+ * destination in a heightmap.
+ *
  */
 public class Rivers {
 
@@ -18,13 +19,25 @@ public class Rivers {
     int n;
     double INF = 9999999999.0;
 
+    /**
+     * Constructor.
+     *
+     * @param grid The heightmap where rivers are generated.
+     */
     public Rivers(double[][] grid) {
         this.heightMap = grid;
         n = grid.length * grid[0].length;
     }
 
-    // Run graph setup and Dijkstra's algorithm.
-    // Adjust values in the heightmap according to the returned path[].
+    /**
+     * Generate a river from source point to destination point in the heightmap.
+     *
+     * @param srcY Y coordinate of source point.
+     * @param srcX X coordinate of source point.
+     * @param destY Y coordinate of destination point.
+     * @param destX X coordinate of destination point.
+     * @param riverVal The value that should be assigned to river points.
+     */
     public void apply(int srcY, int srcX, int destY, int destX, double riverVal) {
 
         int rowWidth = heightMap[0].length;
@@ -68,8 +81,15 @@ public class Rivers {
         }
     }
 
-    // Return array of shortest paths from graph node src
-    // to all other nodes.
+    /**
+     * Dijkstra's algorithm. Public for testing purposes.
+     *
+     * @param src Source node.
+     * @param dest Destination node.
+     * @param all If false, stop when destination node is reached the first
+     * time.
+     * @return Array of distances from source to destination.
+     */
     public double[] dijkstra(int src, int dest, boolean all) {
 
         NodePQ pq = new NodePQ();
@@ -113,8 +133,13 @@ public class Rivers {
         return distances;
     }
 
-    // Create nodes and neighbor sets from height map, adding 1.0
-    // to original values to avoid negative values in returned graph.
+    /**
+     * Create nodes and neighbor sets from height map, adding 1.0 to original
+     * values to avoid negative values in returned graph. Public for
+     * testing purposes.
+     *
+     * @return Finished graph.
+     */
     public Node[] setup() {
 
         int rowLength = heightMap[0].length;
