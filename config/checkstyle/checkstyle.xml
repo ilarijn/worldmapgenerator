@@ -107,7 +107,7 @@
         </module>
         <module name="LocalVariableName">
             <property name="tokens" value="VARIABLE_DEF" />
-            <property name="format" value="^[a-z]([a-zA-Z0-9]*)?$" />
+            <property name="format" value="^[a-z]([a-zA-Z0-9]*)?$|[A-Z]*" />
             <message key="name.invalidPattern" value="Local variable name ''{0}'' must match pattern ''{1}''." />
         </module>
         <module name="ClassTypeParameterName">
@@ -137,10 +137,6 @@
             <property name="lineWrappingIndentation" value="4" />
             <property name="arrayInitIndent" value="4" />
         </module>
-        <module name="AbbreviationAsWordInName">
-            <property name="ignoreFinal" value="false" />
-            <property name="allowedAbbreviationLength" value="3" />
-        </module>
         <module name="OverloadMethodsDeclarationOrder" />
         <module name="VariableDeclarationUsageDistance">
             <property name="allowedDistance" value="10" />
@@ -164,14 +160,6 @@
             <property name="id" value="AnnotationLocationVariables" />
             <property name="tokens" value="VARIABLE_DEF" />
             <property name="allowSamelineMultipleAnnotations" value="true" />
-        </module>
-        <module name="JavadocMethod">
-            <property name="scope" value="public" />
-            <property name="allowMissingParamTags" value="true" />
-            <property name="allowMissingThrowsTags" value="true" />
-            <property name="allowMissingReturnTag" value="true" />
-            <property name="allowedAnnotations" value="Override, Test, Before, After" />
-            <property name="allowThrowsTagsForSubclasses" value="true" />
         </module>
         <module name="MethodName">
             <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9_]*$" />

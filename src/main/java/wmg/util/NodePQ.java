@@ -10,7 +10,8 @@ public class NodePQ {
     private int n;
 
     public NodePQ() {
-        // Set size to a number somewhat greater than the approximate amount of pixels in typical heightmap.
+        // Set size to a number somewhat greater than 
+        // the approximate amount of pixels in typical heightmap.
         pq = new Node[30_001];
         n = 0;
     }

@@ -1,7 +1,8 @@
 package wmg.util;
 
 /**
- * Set structure for integers. Used to record and iterate through node neighbors. 
+ * Set structure for integers. Used to record and iterate through node
+ * neighbors.
  */
 public class IntegerSet {
 
@@ -13,43 +14,52 @@ public class IntegerSet {
      */
     public IntegerSet() {
         n = 0;
-        // Set the size of the set as eight (max number of node neighbors in the river generation graph).
         set = new int[8];
     }
 
     /**
-     * Add argument to set if not already there. 
-     * @param x 
+     * Add argument to set if not already there.
+     *
+     * @param x
      */
     public void add(int x) {
         if (!this.contains(x)) {
-            if (n >= set.length) expand();
+            if (n >= set.length) {
+                expand();
+            }
             set[n++] = x;
         }
     }
 
     /**
      * Add all arguments to set if not already there.
-     * @param args 
+     *
+     * @param args
      */
     public void addAll(int... args) {
-        for (int i : args) add(i);        
+        for (int i : args) {
+            add(i);
+        }
     }
 
     private void expand() {
         int[] clone = new int[set.length * 2];
-        for (int i = 0; i < set.length; i++) clone[i] = set[i];
+        for (int i = 0; i < set.length; i++) {
+            clone[i] = set[i];
+        }
         set = clone;
     }
 
     /**
-     * 
+     *
      * @param x
      * @return True if x is in set.
      */
     public boolean contains(int x) {
         for (int i = 0; i < n; i++) {
-            if (set[i] == x) return true;            
+            if (set[i] == x) {
+                return true;
+            }
         }
         return false;
     }
@@ -60,7 +70,9 @@ public class IntegerSet {
 
     public int[] getSet() {
         int[] res = new int[n];
-        for (int i = 0; i < n; i++) res[i] = set[i];
+        for (int i = 0; i < n; i++) {
+            res[i] = set[i];
+        }
         return res;
     }
 }

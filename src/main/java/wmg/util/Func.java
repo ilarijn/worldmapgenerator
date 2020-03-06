@@ -5,7 +5,7 @@ package wmg.util;
  */
 public class Func {
 
-    public final static double PI = 3.141592653589793;
+    public static final double PI = 3.141592653589793;
 
     /**
      * Absolute value.
@@ -23,11 +23,11 @@ public class Func {
      * value.
      */
     public static int ceil(double x) {
-        int x_int = (int) x;
-        if (x_int == x) {
-            return x_int;
+        int xInt = (int) x;
+        if (xInt == x) {
+            return xInt;
         } else {
-            return (x_int + 1);
+            return (xInt + 1);
         }
     }
 

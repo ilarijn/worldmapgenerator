@@ -53,7 +53,7 @@ public class HeapPerformance {
     }
 
     @Test
-    public void dijkstraNodePQ() {
+    public void dijkstraNodePQTest() {
 
         double avg = 0;
 
@@ -65,7 +65,7 @@ public class HeapPerformance {
             r.setup();
 
             long start = System.nanoTime();
-            double distances[] = r.dijkstra(0, dest, true);
+            double[] distances = r.dijkstra(0, dest, true);
             long end = System.nanoTime();
 
             double res = ((end - start) / 1e9);
@@ -73,13 +73,14 @@ public class HeapPerformance {
 
             distNPQ = distances[dest];
 
-            System.out.println("All shortest paths in [" + n + "][" + n + "] using NodePQ: " + res + "s");
+            System.out.println(
+                    "All shortest paths in [" + n + "][" + n + "] using NodePQ: " + res + "s");
         }
         System.out.println("Average: " + (avg / iterations));
     }
 
     @Test
-    public void dijkstraPQ() {
+    public void dijkstraPQTest() {
 
         double avg = 0;
 
@@ -91,7 +92,7 @@ public class HeapPerformance {
             r.setup();
 
             long start = System.nanoTime();
-            double distances[] = dijkstraPQ(0, dest, true, r.getGraph());
+            double[] distances = dijkstraPQ(0, dest, true, r.getGraph());
             long end = System.nanoTime();
 
             double res = ((end - start) / 1e9);
@@ -99,13 +100,15 @@ public class HeapPerformance {
 
             distPQ = distances[dest];
 
-            System.out.println("All shortest paths in [" + n + "][" + n + "] using PriorityQueue<Node>: " + res + "s");
+            System.out.println(
+                    "All shortest paths in [" + n + "][" + n + "] using PriorityQueue<Node>: "
+                    + res + "s");
         }
         System.out.println("Average: " + (avg / iterations));
     }
 
     @Test
-    public void dijkstraNSquare() {
+    public void dijkstraNSquareTest() {
 
         if (includeNSquare > 0) {
 
@@ -119,7 +122,7 @@ public class HeapPerformance {
                 r.setup();
 
                 long start = System.nanoTime();
-                double distances[] = dijkstraNSquare(0);
+                double[] distances = dijkstraNSquare(0);
                 long end = System.nanoTime();
 
                 double res = ((end - start) / 1e9);
@@ -127,7 +130,9 @@ public class HeapPerformance {
 
                 distNSquare = distances[dest];
 
-                System.out.println("All shortest paths in [" + n + "][" + n + "] using n^2 comparison: " + res + "s");
+                System.out.println(
+                        "All shortest paths in [" + n + "][" + n + "] using n^2 comparison: "
+                        + res + "s");
             }
             System.out.println("Average: " + (avg / iterations) + "s");
         }
@@ -221,22 +226,22 @@ public class HeapPerformance {
 
         for (int i = 0; i < n * n; i++) {
             double min = Double.MAX_VALUE;
-            int min_index = -1;
+            int minIndex = -1;
 
             for (int v = 0; v < n * n; v++) {
                 if (included[v] == false && distance[v] <= min) {
                     min = distance[v];
-                    min_index = v;
+                    minIndex = v;
                 }
             }
 
-            included[min_index] = true;
+            included[minIndex] = true;
 
-            for (int neighbor : neighbors[min_index].getSet()) {
+            for (int neighbor : neighbors[minIndex].getSet()) {
                 if (!included[neighbor]
-                        && distance[min_index] != Double.MAX_VALUE
-                        && distance[min_index] + graph[neighbor].getVal() < distance[neighbor]) {
-                    distance[neighbor] = distance[min_index] + graph[neighbor].getVal();
+                        && distance[minIndex] != Double.MAX_VALUE
+                        && distance[minIndex] + graph[neighbor].getVal() < distance[neighbor]) {
+                    distance[neighbor] = distance[minIndex] + graph[neighbor].getVal();
                 }
             }
         }

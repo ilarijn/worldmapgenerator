@@ -44,8 +44,8 @@ public class MainWindow {
 
     int width = 1000;
     int height = 750;
-    
 
+    
     /************************************
      * UI COMPONENTS                    * 
      ************************************/
@@ -109,8 +109,8 @@ public class MainWindow {
     final VBox cornerBox = new VBox(cornerLabel, topNumberBox, botNumberBox);
 
     final HBox bottomBar = new HBox();
-    
 
+    
     /************************************
      * EVENT HANDLERS                   * 
      ************************************/
@@ -213,7 +213,8 @@ public class MainWindow {
 
         if (file != null) {
             try {
-                WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+                WritableImage writableImage = new WritableImage(
+                        (int) canvas.getWidth(), (int) canvas.getHeight());
                 canvas.snapshot(null, writableImage);
                 RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
                 ImageIO.write(renderedImage, "png", file);
@@ -234,12 +235,15 @@ public class MainWindow {
 
     // Mouse coordinates
     final EventHandler<MouseEvent> coordEvent = (MouseEvent event) -> {
-        coordinates.setText("y: " + (int) (event.getSceneY() - topMenu.getHeight()) + " x: " + (int) event.getSceneX());
+        coordinates.setText(
+                "y: "
+                + (int) (event.getSceneY() - topMenu.getHeight())
+                + " x: " + (int) event.getSceneX());
     };
-    
 
+    
     /***********************************
-     * LAYOUT AND COMPONENT PROPERTIES *
+     * LAYOUT AND COMPONENT PROPERTIES * 
      ***********************************/
     
     public MainWindow(Stage stage) {
@@ -302,7 +306,8 @@ public class MainWindow {
                 makeIntSliderBox(octaveSlider, "Octaves: ", 1, 8, 5));
 
         sliderBox2.getChildren().clear();
-        sliderBox2.getChildren().addAll(makeDoubleSliderBox(waterSlider, "Water level: ", -0.4, 0.5, -0.1, 0.01),
+        sliderBox2.getChildren().addAll(
+                makeDoubleSliderBox(waterSlider, "Water level: ", -0.4, 0.5, -0.1, 0.01),
                 makeDoubleSliderBox(ampSlider, "Amplitude: ", 0.1, 2, 0.6, 0.1));
 
         bottomBar.getChildren().clear();
@@ -311,7 +316,8 @@ public class MainWindow {
 
     private void diamondSetup() {
         sliderBox1.getChildren().clear();
-        sliderBox1.getChildren().addAll(makeDoubleSliderBox(waterSlider, "Water level: ", -0.4, 0.5, 0.0, 0.01));
+        sliderBox1.getChildren().addAll(
+                makeDoubleSliderBox(waterSlider, "Water level: ", -0.4, 0.5, 0.0, 0.01));
 
         randomCheck.setSelected(true);
         toggleDiamondValues();
@@ -355,8 +361,7 @@ public class MainWindow {
         s.setBlockIncrement(1);
         value.setText(Integer.toString((int) s.getValue()));
 
-        s.valueProperty().addListener((observable, oldvalue, newvalue)
-                -> {
+        s.valueProperty().addListener((observable, oldvalue, newvalue) -> {
             int i = newvalue.intValue();
             value.setText(Integer.toString(i));
         });
@@ -364,7 +369,8 @@ public class MainWindow {
         return vbox;
     }
 
-    private VBox makeDoubleSliderBox(Slider s, String l, double min, double max, double val, double incr) {
+    private VBox makeDoubleSliderBox(
+            Slider s, String l, double min, double max, double val, double incr) {
         Label label = new Label(l);
         Text value = new Text();
         HBox hbox = new HBox(label, value);
@@ -377,8 +383,7 @@ public class MainWindow {
         s.setBlockIncrement(incr);
         value.setText(Double.toString(s.getValue()));
 
-        s.valueProperty().addListener((observable, oldvalue, newvalue)
-                -> {
+        s.valueProperty().addListener((observable, oldvalue, newvalue) -> {
             double i = newvalue.doubleValue();
             value.setText(String.format("%.3f", i));
         });

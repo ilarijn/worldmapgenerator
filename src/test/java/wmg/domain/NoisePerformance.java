@@ -1,9 +1,7 @@
-package wmg.util;
+package wmg.domain;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import wmg.domain.DiamondSquare;
-import wmg.domain.PerlinNoise;
 
 /**
  * Performance testing for the noise functions.
@@ -48,7 +46,7 @@ public class NoisePerformance {
             double res = ((end - start) / 1e9);
             avg += res;
 
-            System.out.println("Perlin noise [" + n + "][" + n + "] " + octaves + ": " + res + "s");
+            System.out.println("Perlin noise [" + n + "][" + n + "] " + octaves + " octaves: " + res + "s");
         }
         System.out.println("Average: " + (avg / iterations) + "s");
     }
